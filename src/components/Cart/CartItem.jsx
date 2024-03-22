@@ -35,7 +35,7 @@ const CartItem = () => {
             </div>
             <div className="pt-3 space-x-2">
                 {[1,1,1].map((item, index) => {
-                    return (<Chip label={"bread"}/>);
+                    return (<Chip key={index} label={"bread"}/>);
                 })}
             </div>
         </div>
