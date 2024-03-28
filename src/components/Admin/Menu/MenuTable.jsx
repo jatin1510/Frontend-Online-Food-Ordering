@@ -15,16 +15,23 @@ import CreateIcon from "@mui/icons-material/Create";
 import React from "react";
 import { Delete } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 const orders = [1, 1, 1, 1, 1, 1, 1];
 const MenuTable = () => {
     const navigate = useNavigate();
+    const { menu } = useSelector((store) => store);
     return (
         <Box>
             <Card>
                 <CardHeader
                     title="Menu"
                     action={
-                        <IconButton onClick={()=>navigate('/admin/restaurant/add-menu')} aria-label="settings">
+                        <IconButton
+                            onClick={() =>
+                                navigate("/admin/restaurant/add-menu")
+                            }
+                            aria-label="settings"
+                        >
                             <CreateIcon />
                         </IconButton>
                     }
@@ -44,23 +51,23 @@ const MenuTable = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {orders.map((row) => (
+                            {menu.menuItems.map((item) => (
                                 <TableRow
-                                    key={row.name}
+                                    key={item.id}
                                     sx={{
                                         "&:last-child td, &:last-child th": {
                                             border: 0,
                                         },
                                     }}
                                 >
-                                    <TableCell>{1}</TableCell>
-                                    <TableCell>Image</TableCell>
+                                    <TableCell><img style={{height: '70px', width: '70px', borderRadius: "2rem"}} src={item.images[0]}></img></TableCell>
+                                    <TableCell>{item.name}</TableCell>
                                     <TableCell>
                                         {"customer@gmail.com"}
                                     </TableCell>
-                                    <TableCell align="right">{500}</TableCell>
+                                    <TableCell align="right">{item.price}</TableCell>
                                     <TableCell align="center">
-                                        {"Pizza"}
+                                        {item.available ? "Yes" : "No"}
                                     </TableCell>
                                     <TableCell align="center">
                                         <IconButton>

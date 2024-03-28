@@ -16,11 +16,14 @@ import {
     TextField,
 } from "@mui/material";
 import { useFormik } from "formik";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { uploadToCloudinary } from "../Utils/UploadToCloudinary";
 import * as Yup from "yup";
 import { red } from "@mui/material/colors";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getIngredients } from "../../State/Ingredients/Action";
+import { createMenuItem } from "../../State/Menu/Action";
 
 const validationSchema = Yup.object({
     name: Yup.string().required("Menu name is required"),
@@ -36,6 +39,35 @@ const validationSchema = Yup.object({
 });
 
 const CreateMenuForm = () => {
+    const { ingredients, restaurant } = useSelector((store) => store);
+    const dispatch = useDispatch();
+    const jwt = localStorage.getItem("jwt");
+    useEffect(() => {
+        dispatch(getIngredients({ id: restaurant.userRestaurant?.id, jwt }));
+    }, []);
+
+    const getCategoryById = (id) => {
+        const category = restaurant.categories.find(
+            (category) => category.id === id
+        );
+        return { ...category, restaurantId: restaurant.userRestaurant?.id };
+    };
+    const getIngredientsObjects = (ingredientArray) => {
+        const answer = [];
+        for (let i of ingredients.ingredients) {
+            let flag = false;
+            for (let j of ingredientArray) {
+                if (i.name === j) {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag === true) {
+                answer.push(i);
+            }
+        }
+        return answer;
+    };
     const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
@@ -44,7 +76,6 @@ const CreateMenuForm = () => {
             price: "",
             // foodCategory: {
             category: "",
-            restaurantId: "",
             // },
             images: [],
             isVegetarian: "",
@@ -53,8 +84,20 @@ const CreateMenuForm = () => {
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            values.restaurantId = 1;
-            console.log("values: ", values);
+            const menu = {
+                name: values.name,
+                description: values.description,
+                price: values.price,
+                foodCategory: getCategoryById(values.category),
+                images: values.images,
+                restaurantId: restaurant.userRestaurant?.id,
+                vegetarian: values.isVegetarian,
+                seasonal: values.isSeasonal,
+                ingredients: getIngredientsObjects(values.ingredients),
+            };
+            console.log("Values: ", values);
+            console.log("Created data: ", menu);
+            dispatch(createMenuItem({ menu, jwt }));
         },
     });
 
@@ -223,9 +266,16 @@ const CreateMenuForm = () => {
                                         Boolean(formik.errors.category)
                                     }
                                 >
-                                    <MenuItem value={10}>Ten</MenuItem>
-                                    <MenuItem value={20}>Twenty</MenuItem>
-                                    <MenuItem value={30}>Thirty</MenuItem>
+                                    {restaurant.categories.map((category) => {
+                                        return (
+                                            <MenuItem
+                                                key={category.id}
+                                                value={category}
+                                            >
+                                                {category.name}
+                                            </MenuItem>
+                                        );
+                                    })}
                                 </Select>
                                 {formik.touched.category &&
                                     formik.errors.category && (
@@ -282,11 +332,18 @@ const CreateMenuForm = () => {
                                         </Box>
                                     )}
                                 >
-                                    {["bread", "sauce"].map((name, index) => (
-                                        <MenuItem key={name} value={name}>
-                                            {name}
-                                        </MenuItem>
-                                    ))}
+                                    {ingredients.ingredients.map(
+                                        (ingredient) => {
+                                            return (
+                                                <MenuItem
+                                                    key={ingredient.id}
+                                                    value={ingredient}
+                                                >
+                                                    {ingredient.name}
+                                                </MenuItem>
+                                            );
+                                        }
+                                    )}
                                 </Select>
                                 {formik.touched.ingredients &&
                                     formik.errors.ingredients && (

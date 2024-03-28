@@ -1,21 +1,28 @@
 import {
     Box,
+    Button,
     Card,
     CardHeader,
     IconButton,
     Modal,
     Paper,
+    Popover,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
+    Typography,
 } from "@mui/material";
 import CreateIcon from "@mui/icons-material/Create";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CreateIngredientItemForm from "./CreateIngredientItemForm";
-const orders = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+import { useDispatch, useSelector } from "react-redux";
+import {
+    getIngredients,
+    updateStockOfIngredient,
+} from "../../State/Ingredients/Action";
 
 const style = {
     position: "absolute",
@@ -30,9 +37,33 @@ const style = {
 };
 
 const IngredientTable = () => {
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handlePopoverOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+    };
+
+    const openPop = Boolean(anchorEl);
+
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    const { ingredients, restaurant } = useSelector((store) => store);
+    const dispatch = useDispatch();
+    const jwt = localStorage.getItem("jwt");
+
+    useEffect(() => {
+        dispatch(getIngredients({ id: restaurant.userRestaurant?.id, jwt }));
+    }, []);
+
+    const handleUpdateStock = (id) => {
+        dispatch(updateStockOfIngredient({ id, jwt }));
+    };
     return (
         <Box>
             <Card>
@@ -52,25 +83,69 @@ const IngredientTable = () => {
                                 <TableCell>Name</TableCell>
                                 <TableCell>Category</TableCell>
                                 <TableCell align="right">
-                                    Availability
+                                    Item Stock Availability
                                 </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {orders.map((row) => (
+                            {ingredients.ingredients.map((item) => (
                                 <TableRow
-                                    key={row.name}
+                                    key={item.id}
                                     sx={{
                                         "&:last-child td, &:last-child th": {
                                             border: 0,
                                         },
                                     }}
                                 >
-                                    <TableCell>{1}</TableCell>
-                                    <TableCell>{"name"}</TableCell>
-                                    <TableCell>{"category"}</TableCell>
+                                    <TableCell>{item.id}</TableCell>
+                                    <TableCell>{item.name}</TableCell>
+                                    <TableCell>{item.category.name}</TableCell>
                                     <TableCell align="right">
-                                        {"Available"}
+                                        <Button
+                                            sx={{ width: "60%" }}
+                                            onClick={() => {
+                                                handleUpdateStock(item.id);
+                                            }}
+                                            aria-owns={
+                                                openPop
+                                                    ? "mouse-over-popover"
+                                                    : undefined
+                                            }
+                                            aria-haspopup="true"
+                                            onMouseEnter={handlePopoverOpen}
+                                            onMouseLeave={handlePopoverClose}
+                                            color={
+                                                item.inStock
+                                                    ? "success"
+                                                    : "error"
+                                            }
+                                        >
+                                            {item.inStock
+                                                ? "In Stock"
+                                                : "Out of Stock"}
+                                        </Button>
+                                        <Popover
+                                            id="mouse-over-popover"
+                                            sx={{
+                                                pointerEvents: "none",
+                                            }}
+                                            open={openPop}
+                                            anchorEl={anchorEl}
+                                            anchorOrigin={{
+                                                vertical: "top",
+                                                horizontal: "left",
+                                            }}
+                                            transformOrigin={{
+                                                vertical: "bottom",
+                                                horizontal: "left",
+                                            }}
+                                            onClose={handlePopoverClose}
+                                            disableRestoreFocus
+                                        >
+                                            <Typography sx={{ p: 1 }}>
+                                                {"Change Availability"}
+                                            </Typography>
+                                        </Popover>
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -85,7 +160,7 @@ const IngredientTable = () => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <CreateIngredientItemForm />
+                    <CreateIngredientItemForm handleClose={handleClose} />
                 </Box>
             </Modal>
         </Box>

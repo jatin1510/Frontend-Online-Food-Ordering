@@ -13,10 +13,10 @@ import {
     TableRow,
 } from "@mui/material";
 import CreateIcon from "@mui/icons-material/Create";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CreateIngredientCategoryForm from "./CreateIngredientCategoryForm";
-
-const orders = [1, 1, 1, 1, 1, 1, 1];
+import { useDispatch, useSelector } from "react-redux";
+import { getIngredientCategories } from "../../State/Ingredients/Action";
 
 const style = {
     position: "absolute",
@@ -34,16 +34,26 @@ const IngredientCategoryTable = () => {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    const { ingredients, restaurant } = useSelector((store) => store);
+    const dispatch = useDispatch();
+    const jwt = localStorage.getItem("jwt");
+
+    useEffect(() => {
+        dispatch(
+            getIngredientCategories({
+                id: restaurant.userRestaurant?.id,
+                jwt,
+            })
+        );
+    }, []);
     return (
         <Box>
             <Card>
                 <CardHeader
                     title="Ingredient Category"
                     action={
-                        <IconButton
-                            onClick={handleOpen}
-                            aria-label="settings"
-                        >
+                        <IconButton onClick={handleOpen} aria-label="settings">
                             <CreateIcon />
                         </IconButton>
                     }
@@ -57,18 +67,18 @@ const IngredientCategoryTable = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {orders.map((row) => (
+                            {ingredients.categories.map((item) => (
                                 <TableRow
-                                    key={row.name}
+                                    key={item.id}
                                     sx={{
                                         "&:last-child td, &:last-child th": {
                                             border: 0,
                                         },
                                     }}
                                 >
-                                    <TableCell>{1}</TableCell>
+                                    <TableCell>{item.id}</TableCell>
                                     <TableCell align="right">
-                                        {"name"}
+                                        {item.name}
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -83,7 +93,7 @@ const IngredientCategoryTable = () => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <CreateIngredientCategoryForm />
+                    <CreateIngredientCategoryForm handleClose={handleClose} />
                 </Box>
             </Modal>
         </Box>

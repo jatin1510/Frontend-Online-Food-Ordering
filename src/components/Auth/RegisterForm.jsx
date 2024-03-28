@@ -72,7 +72,7 @@ const RegisterForm = () => {
                                     label="Full Name"
                                     fullWidth
                                     variant="outlined"
-                                    error={!ErrorMessage("fullName")}
+                                    error={Boolean(errors.fullName && touched.fullName)}
                                     helperText={
                                         <ErrorMessage name="fullName">
                                             {(msg) => (
@@ -91,7 +91,7 @@ const RegisterForm = () => {
                                     label="Email Address"
                                     fullWidth
                                     variant="outlined"
-                                    error={!ErrorMessage("email")}
+                                    error={Boolean(errors.email && touched.email)}
                                     helperText={
                                         <ErrorMessage name="email">
                                             {(msg) => (
@@ -110,7 +110,7 @@ const RegisterForm = () => {
                                     label="Password"
                                     fullWidth
                                     variant="outlined"
-                                    error={!ErrorMessage("password")}
+                                    error={Boolean(errors.password && touched.password)}
                                     helperText={
                                         <ErrorMessage name="password">
                                             {(msg) => (
@@ -133,7 +133,7 @@ const RegisterForm = () => {
                                         label="Role"
                                         labelId="demo-simple-select-label"
                                         id="demo-simple-select"
-                                        error={!ErrorMessage("role")}
+                                        error={Boolean(errors.role && touched.role)}
                                     >
                                         <MenuItem value="ROLE_CUSTOMER">
                                             Customer

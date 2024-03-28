@@ -10,6 +10,7 @@ import PaymentSuccess from "../Payment/PaymentSuccess";
 import PaymentFailure from "../Payment/PaymentFailure";
 
 const CustomerRoute = () => {
+    
     return (
         <div>
             <Navbar />
@@ -20,11 +21,7 @@ const CustomerRoute = () => {
                     path="/account/register"
                     element={<Home />}
                 ></Route>
-                <Route
-                    exact
-                    path="/account/login"
-                    element={<Home />}
-                ></Route>
+                <Route exact path="/account/login" element={<Home />}></Route>
                 <Route
                     exact
                     path="/restaurant/:city/:title/:id"
@@ -32,10 +29,18 @@ const CustomerRoute = () => {
                 ></Route>
                 <Route exact path="/cart" element={<Cart />}></Route>
                 <Route exact path="/profile/*" element={<Profile />}></Route>
-                <Route exact path="/payment/success/:id" element={<PaymentSuccess />}></Route>
-                <Route exact path="/payment/failure" element={<PaymentFailure />}></Route>
+                <Route
+                    exact
+                    path="/payment/success/:id"
+                    element={<PaymentSuccess />}
+                ></Route>
+                <Route
+                    exact
+                    path="/payment/failure"
+                    element={<PaymentFailure />}
+                ></Route>
             </Routes>
-            <Auth/>
+            <Auth />
         </div>
     );
 };

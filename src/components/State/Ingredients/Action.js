@@ -23,7 +23,7 @@ export const getIngredients = ({ id, jwt }) => {
         dispatch({ type: GET_INGREDIENTS_REQUEST });
         try {
             const { data } = await api.get(
-                `/api/admin/ingredients/items/${id}`,
+                `/api/admin/ingredients/restaurant/${id}/items`,
                 {
                     headers: {
                         Authorization: `Bearer ${jwt}`,
@@ -118,7 +118,7 @@ export const updateStockOfIngredient = ({ jwt, id }) => {
         dispatch({ type: UPDATE_STOCK_REQUEST });
         try {
             const { data } = await api.put(
-                `/api/admin/ingredients/${id}/stock`,
+                `/api/admin/ingredients/item/${id}/stock`,
                 {},
                 {
                     headers: {

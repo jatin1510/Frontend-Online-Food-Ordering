@@ -11,6 +11,8 @@ import { useFormik } from "formik";
 import React, { useState } from "react";
 import { uploadToCloudinary } from "./Utils/UploadToCloudinary";
 import * as Yup from "yup";
+import { useDispatch } from "react-redux";
+import { createRestaurant } from "../State/Restaurant/Action";
 
 const validationSchema = Yup.object({
     name: Yup.string().required("Restaurant name is required"),
@@ -36,6 +38,8 @@ const validationSchema = Yup.object({
 });
 
 const CreateRestaurantForm = () => {
+    const dispatch = useDispatch();
+    const jwt = localStorage.getItem("jwt");
     const formik = useFormik({
         initialValues: {
             name: "",
@@ -80,6 +84,7 @@ const CreateRestaurantForm = () => {
                 images: values.images,
             };
             console.log("data ", data);
+            dispatch(createRestaurant({ jwt, data }));
         },
     });
 

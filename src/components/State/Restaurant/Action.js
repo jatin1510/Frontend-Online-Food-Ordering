@@ -42,15 +42,11 @@ import {
     UPDATE_RESTAURANT_SUCCESS,
 } from "./ActionTypes";
 
-export const getAllRestaurants = (token) => {
+export const getAllRestaurants = () => {
     return async (dispatch) => {
         dispatch({ type: GET_ALL_RESTAURANTS_REQUEST });
         try {
-            const { data } = await api.get("/api/restaurants", {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+            const { data } = await api.get("/api/restaurants");
             console.log("All Restaurants: ", data);
             dispatch({
                 type: GET_ALL_RESTAURANTS_SUCCESS,
@@ -109,7 +105,6 @@ export const getRestaurantByUserId = (jwt) => {
 };
 
 export const createRestaurant = (req) => {
-    console.log("token: ", req.token);
     return async (dispatch) => {
         dispatch({ type: CREATE_RESTAURANT_REQUEST });
         try {

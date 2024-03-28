@@ -1,4 +1,4 @@
-import api from "../../Config/api";
+import { api } from "../../Config/api";
 import {
     GET_RESTAURANT_ORDERS_FAILURE,
     GET_RESTAURANT_ORDERS_REQUEST,
@@ -8,15 +8,17 @@ import {
 export const getRestaurantOrders = ({ jwt, restaurantId, orderStatus }) => {
     return async (dispatch) => {
         dispatch({ type: GET_RESTAURANT_ORDERS_REQUEST });
+        var url = `/api/admin/orders/restaurant/${restaurantId}`;
+        if (orderStatus) {
+            url = url + `?orderStatus=${orderStatus}`;
+        }
+        console.log("orders url: ", url);
         try {
-            const { data } = await api.get(
-                `/api/admin/orders/restaurant/${restaurantId}?orderStatus=${orderStatus}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${jwt}`,
-                    },
-                }
-            );
+            const { data } = await api.get(url, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
             console.log("Get restaurant orders data: ", data);
             dispatch({ type: GET_RESTAURANT_ORDERS_SUCCESS, payload: data });
         } catch (error) {

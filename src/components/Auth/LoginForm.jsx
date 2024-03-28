@@ -59,7 +59,9 @@ const LoginForm = () => {
                                     label="Email Address"
                                     fullWidth
                                     variant="outlined"
-                                    error={!ErrorMessage("email")}
+                                    error={Boolean(
+                                        errors.email && touched.email
+                                    )}
                                     helperText={
                                         <ErrorMessage name="email">
                                             {(msg) => (
@@ -73,12 +75,13 @@ const LoginForm = () => {
                             </Grid>
                             <Grid item xs={12}>
                                 <Field
+                                    type="password"
                                     as={TextField}
                                     name="password"
                                     label="Password"
                                     fullWidth
                                     variant="outlined"
-                                    error={!ErrorMessage("password")}
+                                    error={Boolean(errors.password && touched.password)}    
                                     helperText={
                                         <ErrorMessage name="password">
                                             {(msg) => (

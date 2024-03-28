@@ -7,11 +7,10 @@ import { getAllRestaurants } from "../State/Restaurant/Action";
 
 const Home = () => {
     const dispatch = useDispatch();
-    const jwt = localStorage.getItem("jwt");
     const { restaurant } = useSelector((store) => store);
 
     useEffect(() => {
-        dispatch(getAllRestaurants(jwt));
+        dispatch(getAllRestaurants());
     }, []);
 
     return (

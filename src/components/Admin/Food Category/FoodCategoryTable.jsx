@@ -15,7 +15,7 @@ import {
 import CreateIcon from "@mui/icons-material/Create";
 import React, { useState } from "react";
 import CreateFoodCategoryForm from "./CreateFoodCategoryForm";
-const orders = [1, 1, 1, 1, 1, 1, 1];
+import { useSelector } from "react-redux";
 
 const style = {
     position: "absolute",
@@ -29,7 +29,8 @@ const style = {
     p: 4,
 };
 
-const MenuTable = () => {
+const FoodCategoryTable = () => {
+    const { restaurant } = useSelector((store) => store);
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -54,18 +55,18 @@ const MenuTable = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {orders.map((row) => (
+                            {restaurant.categories.map((item) => (
                                 <TableRow
-                                    key={row.name}
+                                    key={item.id}
                                     sx={{
                                         "&:last-child td, &:last-child th": {
                                             border: 0,
                                         },
                                     }}
                                 >
-                                    <TableCell>{1}</TableCell>
+                                    <TableCell>{item.id}</TableCell>
                                     <TableCell align="right">
-                                        {"Name"}
+                                        {item.name}
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -80,11 +81,11 @@ const MenuTable = () => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <CreateFoodCategoryForm />
+                    <CreateFoodCategoryForm handleClose={handleClose} />
                 </Box>
             </Modal>
         </Box>
     );
 };
 
-export default MenuTable;
+export default FoodCategoryTable;

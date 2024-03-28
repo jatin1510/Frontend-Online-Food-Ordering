@@ -10,23 +10,35 @@ import {
 import React from "react";
 import InstagramIcon from "@mui/icons-material/Instagram";
 import TwitterIcon from "@mui/icons-material/Twitter";
+import { useDispatch, useSelector } from "react-redux";
+import { updateRestaurantStatus } from "../State/Restaurant/Action";
 
 const RestaurantDetails = () => {
-    const handleRestaurantStatus = () => {};
+    const { restaurant } = useSelector((store) => store);
+    const dispatch = useDispatch();
+    const jwt = localStorage.getItem("jwt");
+    const handleRestaurantStatus = () => {
+        dispatch(
+            updateRestaurantStatus({
+                jwt,
+                restaurantId: restaurant.userRestaurant?.id,
+            })
+        );
+    };
     return (
         <div className="lg:px-20 px-5 pb-10">
             <div className="py-5 flex justify-center items-center gap-5">
                 <h1 className="text-2xl lg:text-4xl text-center font-bold p-5">
-                    Indian Fast Food
+                    {restaurant.userRestaurant?.name}
                 </h1>
                 <div>
                     <Button
-                        color={true ? "primary" : "error"}
+                        color={restaurant.userRestaurant?.open ? "error" : "success"}
                         onClick={handleRestaurantStatus}
                         size="large"
                         variant="contained"
                     >
-                        {true ? "Close" : "Open"}
+                        {restaurant.userRestaurant?.open ? "Close" : "Open"}
                     </Button>
                 </div>
             </div>
@@ -46,39 +58,47 @@ const RestaurantDetails = () => {
                                     <p className="w-48">Owner</p>
                                     <span className="pr-6">-</span>
                                     <p className="text-gray-400">
-                                        Jatin Ranpariya
+                                        {
+                                            restaurant.userRestaurant?.owner
+                                                .fullName
+                                        }
                                     </p>
                                 </div>
                                 <div className="flex">
                                     <p className="w-48">Restaurant Name</p>
                                     <span className="pr-6">-</span>
                                     <p className="text-gray-400">
-                                        Indian Fast Food
+                                        {restaurant.userRestaurant?.name}
                                     </p>
                                 </div>
                                 <div className="flex">
                                     <p className="w-48">Cuisine Type</p>
                                     <span className="pr-6">-</span>
-                                    <p className="text-gray-400">Indian</p>
+                                    <p className="text-gray-400">
+                                        {restaurant.userRestaurant?.cuisineType}
+                                    </p>
                                 </div>
                                 <div className="flex">
                                     <p className="w-48">Opening Hours</p>
                                     <span className="pr-6">-</span>
                                     <p className="text-gray-400">
-                                        Monday to Sunday - 9:00 AM to 9:00 PM
+                                        {
+                                            restaurant.userRestaurant
+                                                ?.openingHours
+                                        }
                                     </p>
                                 </div>
                                 <div className="flex">
                                     <p className="w-48">Status</p>
                                     <p className="text-gray-400">
                                         <span className="pr-6">-</span>
-                                        {true ? (
+                                        {restaurant.userRestaurant?.open ? (
                                             <span className="px-5 py-2 rounded-full bg-green-400 text-gray-950">
-                                                Open
+                                                Opened
                                             </span>
                                         ) : (
                                             <span className="px-5 py-2 rounded-full bg-red-400 text-gray-50">
-                                                Close
+                                                Closed
                                             </span>
                                         )}
                                     </p>
@@ -100,24 +120,41 @@ const RestaurantDetails = () => {
                                     <p className="w-48">Street Address</p>
                                     <span className="pr-6">-</span>
                                     <p className="text-gray-400 w-60">
-                                        Deepkamal Shopping Mall Deepkamal
-                                        Shopping Mall
+                                        {
+                                            restaurant.userRestaurant?.address
+                                                .streetAddress
+                                        }
                                     </p>
                                 </div>
                                 <div className="flex">
                                     <p className="w-48">City</p>
                                     <span className="pr-6">-</span>
-                                    <p className="text-gray-400">Surat</p>
+                                    <p className="text-gray-400">
+                                        {
+                                            restaurant.userRestaurant?.address
+                                                .city
+                                        }
+                                    </p>
                                 </div>
                                 <div className="flex">
                                     <p className="w-48">State / Province</p>
                                     <span className="pr-6">-</span>
-                                    <p className="text-gray-400">Gujarat</p>
+                                    <p className="text-gray-400">
+                                        {
+                                            restaurant.userRestaurant?.address
+                                                .stateProvince
+                                        }
+                                    </p>
                                 </div>
                                 <div className="flex">
                                     <p className="w-48">Country</p>
                                     <span className="pr-6">-</span>
-                                    <p className="text-gray-400">India</p>
+                                    <p className="text-gray-400">
+                                        {
+                                            restaurant.userRestaurant?.address
+                                                .country
+                                        }
+                                    </p>
                                 </div>
                             </div>
                         </CardContent>
@@ -136,25 +173,42 @@ const RestaurantDetails = () => {
                                     <p className="w-48">Email</p>
                                     <span className="pr-6">-</span>
                                     <p className="text-gray-400 w-60">
-                                        jatinranpariya1510@gmail.com
+                                        {restaurant.userRestaurant?.owner.email}
                                     </p>
                                 </div>
                                 <div className="flex">
                                     <p className="w-48">Mobile</p>
                                     <span className="pr-6">-</span>
-                                    <p className="text-gray-400">7817831640</p>
+                                    <p className="text-gray-400">
+                                        {
+                                            restaurant.userRestaurant
+                                                ?.contactInformation?.mobile
+                                        }
+                                    </p>
                                 </div>
-                                <Divider sx={{width:'100%'}}/>
+                                <Divider sx={{ width: "100%" }} />
                                 <div className="flex justify-center text-gray-400 pt-2">
                                     <IconButton>
-                                        <a href="/">
+                                        <a
+                                            href={
+                                                restaurant.userRestaurant
+                                                    ?.contactInformation
+                                                    ?.instagram
+                                            }
+                                        >
                                             <InstagramIcon
                                                 sx={{ fontSize: "3rem" }}
                                             />
                                         </a>
                                     </IconButton>
                                     <IconButton>
-                                        <a href="/">
+                                        <a
+                                            href={
+                                                restaurant.userRestaurant
+                                                    ?.contactInformation
+                                                    ?.twitter
+                                            }
+                                        >
                                             <TwitterIcon
                                                 sx={{ fontSize: "3rem" }}
                                             />

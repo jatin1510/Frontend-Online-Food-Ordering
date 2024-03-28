@@ -59,7 +59,8 @@ const RestaurantCard = ({ item }) => {
                 <div>
                     <IconButton
                         onClick={() => {
-                            handleAddToFavorite(item.id);
+                            if (auth?.user) handleAddToFavorite(item.id);
+                            else navigate("/account/login");
                         }}
                     >
                         {isPresentInFavorites(auth.favorites, item) ? (

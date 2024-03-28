@@ -17,13 +17,16 @@ function App() {
     useEffect(() => {
         dispatch(getUser(auth.jwt || jwt));
 
-        if (auth.user.role === "ROLE_CUSTOMER") {
-            dispatch(findCart({ jwt: auth.jwt || jwt }));
-        }
-        if (auth.user.role === "ROLE_RESTAURANT_OWNER") {
-            dispatch(getRestaurantByUserId(auth.jwt || jwt));
-        }
-    }, []);
+        // if (auth.user?.role === "ROLE_CUSTOMER") {
+        dispatch(findCart({ jwt: auth.jwt || jwt }));
+        // }
+    }, [auth.jwt]);
+
+    useEffect(() => {
+        // if (auth.user?.role === "ROLE_RESTAURANT_OWNER") {
+        dispatch(getRestaurantByUserId(auth.jwt || jwt));
+        // }
+    }, [auth.user]);
 
     return (
         <div>

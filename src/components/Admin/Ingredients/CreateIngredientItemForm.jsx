@@ -7,12 +7,15 @@ import {
     TextField,
 } from "@mui/material";
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { createIngredientItem } from "../../State/Ingredients/Action";
 
-const CreateIngredientItem = () => {
+const CreateIngredientItem = ({ handleClose }) => {
     const [FormData, setFormData] = useState({
         name: "",
         ingredientCategoryId: "",
     });
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -20,9 +23,20 @@ const CreateIngredientItem = () => {
             [name]: value,
         });
     };
+
+    const { ingredients, restaurant } = useSelector((store) => store);
+    const dispatch = useDispatch();
+    const jwt = localStorage.getItem("jwt");
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(FormData);
+        const data = {
+            name: FormData.name,
+            categoryId: FormData.ingredientCategoryId,
+            restaurantId: restaurant.userRestaurant?.id,
+        };
+        dispatch(createIngredientItem({ jwt, data }));
+        handleClose();
     };
 
     return (
@@ -63,9 +77,13 @@ const CreateIngredientItem = () => {
                             //     Boolean(formik.errors.category)
                             // }
                         >
-                            <MenuItem value={10}>Ten</MenuItem>
-                            <MenuItem value={20}>Twenty</MenuItem>
-                            <MenuItem value={30}>Thirty</MenuItem>
+                            {ingredients.categories.map((item) => {
+                                return (
+                                    <MenuItem key={item.id} value={item.id}>
+                                        {item.name}
+                                    </MenuItem>
+                                );
+                            })}
                         </Select>
                         {/* {formik.touched.category && formik.errors.category && (
                             <FormHelperText sx={{ color: red[500] }}>
