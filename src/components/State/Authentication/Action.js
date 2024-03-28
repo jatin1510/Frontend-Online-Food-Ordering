@@ -18,10 +18,7 @@ import {
 export const registerUser = (req) => async (dispatch) => {
     dispatch({ type: REGISTER_REQUEST });
     try {
-        const { data } = await api.post(
-            `/auth/signup`,
-            req.userData
-        );
+        const { data } = await api.post(`/auth/signup`, req.userData);
         if (data.jwt) localStorage.setItem("jwt", data.jwt);
         if (data.role === "ROLE_RESTAURANT_OWNER") {
             req.navigate("/admin/restaurant");
@@ -39,10 +36,7 @@ export const registerUser = (req) => async (dispatch) => {
 export const loginUser = (req) => async (dispatch) => {
     dispatch({ type: LOGIN_REQUEST });
     try {
-        const { data } = await api.post(
-            `/auth/signin`,
-            req.userData
-        );
+        const { data } = await api.post(`/auth/signin`, req.userData);
         if (data.jwt) localStorage.setItem("jwt", data.jwt);
         if (data.role === "ROLE_RESTAURANT_OWNER") {
             req.navigate("/admin/restaurant");

@@ -9,15 +9,17 @@ import {
 } from "./ActionTypes";
 
 export const createOrder = (req) => {
-    return (dispatch) => {
+    return async (dispatch) => {
         dispatch({ type: CREATE_ORDER_REQUEST });
         try {
-            const { data } = api.post(`/api/order`, req.data, {
+            const { data } = await api.post(`/api/order`, req.data, {
                 headers: {
                     Authorization: `Bearer ${req.jwt}`,
                 },
             });
-            // TODO: Integrate Payment Gateway
+            if (data.payment_url) {
+                window.location.href = data.payment_url;
+            }
             console.log("Create order data: ", data);
             dispatch({ type: CREATE_ORDER_SUCCESS, payload: data });
         } catch (error) {
@@ -28,10 +30,10 @@ export const createOrder = (req) => {
 };
 
 export const getUserOrders = (jwt) => {
-    return (dispatch) => {
+    return async (dispatch) => {
         dispatch({ type: GET_USER_ORDERS_REQUEST });
         try {
-            const { data } = api.get(`/api/orders/user`, {
+            const { data } = await api.get(`/api/orders/user`, {
                 headers: {
                     Authorization: `Bearer ${jwt}`,
                 },

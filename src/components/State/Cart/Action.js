@@ -21,13 +21,13 @@ import {
     UPDATE_CART_ITEM_SUCCESS,
 } from "./ActionTypes";
 
-export const findCart = (token) => {
-    return (dispatch) => {
+export const findCart = ({ jwt }) => {
+    return async (dispatch) => {
         dispatch({ type: FIND_CART_REQUEST });
         try {
-            const { data } = api.get(`/api/cart`, {
+            const { data } = await api.get(`/api/cart`, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${jwt}`,
                 },
             });
 
@@ -44,12 +44,12 @@ export const findCart = (token) => {
 // FIXME: In the video, he is taking req, as parameter but it has no significance as nobody can see others cart
 // TODO: Reducer is also pending for this request
 export const getAllCartItems = (req) => {
-    return (dispatch) => {
+    return async (dispatch) => {
         dispatch({ type: GET_ALL_CART_ITEMS_REQUEST });
         try {
-            const { data } = api.get(`/api/carts/${req.cartId}/items`, {
+            const { data } = await api.get(`/api/carts/${req.cartId}/items`, {
                 headers: {
-                    Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${req.token}`,
                 },
             });
 
@@ -63,10 +63,11 @@ export const getAllCartItems = (req) => {
 };
 
 export const addItemToCart = (req) => {
-    return (dispatch) => {
+    
+    return async (dispatch) => {
         dispatch({ type: ADD_ITEM_TO_CART_REQUEST });
         try {
-            const { data } = api.post(`/api/carts/add`, req.cartItem, {
+            const { data } = await api.post(`/api/cart/add`, req.cartItem, {
                 headers: {
                     Authorization: `Bearer ${req.token}`,
                 },
@@ -82,10 +83,10 @@ export const addItemToCart = (req) => {
 };
 
 export const updateCartItem = (req) => {
-    return (dispatch) => {
+    return async (dispatch) => {
         dispatch({ type: UPDATE_CART_ITEM_REQUEST });
         try {
-            const { data } = api.put(`/api/cart-item/update`, req.data, {
+            const { data } = await api.put(`/api/cart-item/update`, req.data, {
                 headers: {
                     Authorization: `Bearer ${req.jwt}`,
                 },
@@ -101,14 +102,17 @@ export const updateCartItem = (req) => {
 };
 
 export const removeCartItem = ({ cartItemId, jwt }) => {
-    return (dispatch) => {
+    return async (dispatch) => {
         dispatch({ type: REMOVE_CART_ITEM_REQUEST });
         try {
-            const { data } = api.delete(`/api/cart-item/${cartItemId}/remove`, {
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
-                },
-            });
+            const { data } = await api.delete(
+                `/api/cart-item/${cartItemId}/remove`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${jwt}`,
+                    },
+                }
+            );
 
             console.log("Remove cart item data: ", data);
             dispatch({ type: REMOVE_CART_ITEM_SUCCESS, payload: cartItemId });
@@ -120,10 +124,10 @@ export const removeCartItem = ({ cartItemId, jwt }) => {
 };
 
 export const clearCart = () => {
-    return (dispatch) => {
+    return async (dispatch) => {
         dispatch({ type: CLEAR_CART_REQUEST });
         try {
-            const { data } = api.delete(`/api/carts/clear`, {
+            const { data } = await api.delete(`/api/carts/clear`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("jwt")}`,
                 },

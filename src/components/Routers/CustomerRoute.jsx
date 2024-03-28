@@ -6,6 +6,8 @@ import RestaurantDetail from "../Restaurant/RestaurantDetail";
 import Cart from "../Cart/Cart";
 import Profile from "../Profile/Profile";
 import Auth from "../Auth/Auth";
+import PaymentSuccess from "../Payment/PaymentSuccess";
+import PaymentFailure from "../Payment/PaymentFailure";
 
 const CustomerRoute = () => {
     return (
@@ -30,6 +32,8 @@ const CustomerRoute = () => {
                 ></Route>
                 <Route exact path="/cart" element={<Cart />}></Route>
                 <Route exact path="/profile/*" element={<Profile />}></Route>
+                <Route exact path="/payment/success/:id" element={<PaymentSuccess />}></Route>
+                <Route exact path="/payment/failure" element={<PaymentFailure />}></Route>
             </Routes>
             <Auth/>
         </div>

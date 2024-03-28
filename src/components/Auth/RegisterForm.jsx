@@ -21,7 +21,7 @@ const initialValues = {
     fullName: "",
     email: "",
     password: "",
-    role: "ROLE_CUSTOMER"
+    role: "ROLE_CUSTOMER",
 };
 
 const validationSchema = new Yup.ObjectSchema({
@@ -49,13 +49,12 @@ const RegisterForm = () => {
                 <Typography variant="h5" className="text-center">
                     Register
                 </Typography>
-                <IconButton>
-                    <CloseIcon
-                        color="primary"
-                        onClick={() => {
-                            navigate("/");
-                        }}
-                    />
+                <IconButton
+                    onClick={() => {
+                        navigate("/");
+                    }}
+                >
+                    <CloseIcon color="primary" />
                 </IconButton>
             </div>
             <Formik

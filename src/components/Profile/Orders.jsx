@@ -1,17 +1,24 @@
-import React from "react";
+import React, { useEffect } from "react";
 import OrderCard from "./OrderCard";
-const orders = [1, 1, 1, 1];
+import { useDispatch, useSelector } from "react-redux";
+import { getUserOrders } from "../State/Orders/Action";
 
 const Orders = () => {
+    const { order } = useSelector((store) => store);
+    const dispatch = useDispatch();
+    const jwt = localStorage.getItem("jwt");
+
+    useEffect(() => {
+        dispatch(getUserOrders(jwt));
+    }, []);
+
     return (
         <div className="flex items-center flex-col">
             <h1 className="text-xl text-center py-7 font-semibold">
                 My Orders
             </h1>
             <div className="space-y-5 w-full lg:w-1/2">
-                {orders.map((item, index) => {
-                    return <OrderCard key={index} />;
-                })}
+                {order.orders.map((order, index) => order.items.map((it, idx) => <OrderCard order={order} item={it}/>))}
             </div>
         </div>
     );

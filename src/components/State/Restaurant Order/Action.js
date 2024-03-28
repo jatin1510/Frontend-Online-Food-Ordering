@@ -6,10 +6,10 @@ import {
 } from "./ActionTypes";
 
 export const getRestaurantOrders = ({ jwt, restaurantId, orderStatus }) => {
-    return (dispatch) => {
+    return async (dispatch) => {
         dispatch({ type: GET_RESTAURANT_ORDERS_REQUEST });
         try {
-            const { data } = api.get(
+            const { data } = await api.get(
                 `/api/admin/orders/restaurant/${restaurantId}?orderStatus=${orderStatus}`,
                 {
                     headers: {

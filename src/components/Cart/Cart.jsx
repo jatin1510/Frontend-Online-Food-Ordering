@@ -13,6 +13,8 @@ import AddressCard from "./AddressCard";
 import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
+import { createOrder } from "../State/Orders/Action";
 
 export const style = {
     position: "absolute",
@@ -37,14 +39,20 @@ const initialValues = {
 const validationSchema = new Yup.ObjectSchema({
     streetAddress: Yup.string().required("Street address is required"),
     state: Yup.string().required("State is required"),
-    pincode: Yup.string().length(6, "Required length 6").matches(/^[0-9]{6}/, "Pincode must be number").required("Pincode is required"),
+    pincode: Yup.string()
+        .length(6, "Required length 6")
+        .matches(/^[0-9]{6}/, "Pincode must be number")
+        .required("Pincode is required"),
     city: Yup.string().required("City is required"),
     country: Yup.string().required("Country is required"),
 });
 
-const items = [1, 1];
 const Cart = () => {
-    const createOrderUsingSelectedAddress = (index) => {};
+    const dispatch = useDispatch();
+    const { cart, auth } = useSelector((store) => store);
+    const createOrderUsingSelectedAddress = (index) => {
+        console.log("chosen address");
+    };
     const handleAddressOpenModal = () => {
         setOpen(true);
     };
@@ -53,23 +61,40 @@ const Cart = () => {
     const [open, setOpen] = React.useState(false);
     const handleClose = () => setOpen(false);
     const handleSubmit = (values) => {
-        console.log(values);
+        const req = {
+            jwt: localStorage.getItem("jwt"),
+            data: {
+                restaurantId: cart.cartItems[0].food?.restaurant.id,
+                deliveryAddress: {
+                    streetAddress: values.streetAddress,
+                    city: values.city,
+                    stateProvince: values.state,
+                    postalCode: values.pincode,
+                    country: values.country,
+                },
+            },
+        };
+        dispatch(createOrder(req));
     };
 
     return (
         <div>
             <main className="lg:flex justify-between ">
                 <section className="lg:w-[30%] space-y-6 lg:min-h-screen pt-10">
-                    {items.map((item, index) => {
-                        return <CartItem key={index} />;
-                    })}
+                    {cart.cartItems.length > 0 ? (
+                        cart.cartItems.map((item, index) => {
+                            return <CartItem key={index} item={item} />;
+                        })
+                    ) : (
+                        <div className="text-center">Cart Empty</div>
+                    )}
                     <Divider />
                     <div className="billDetails px-5 text-sm">
                         <p className="font-extralight py-5">Bill Details</p>
                         <div className="space-y-3">
                             <div className="flex justify-between text-gray-400 ">
                                 <p>Item total</p>
-                                <p>₹2500</p>
+                                <p>₹{cart.cart?.total}</p>
                             </div>
                             <div className="flex justify-between text-gray-400 ">
                                 <p>Delivery charge</p>
@@ -77,13 +102,13 @@ const Cart = () => {
                             </div>
                             <div className="flex justify-between text-gray-400 ">
                                 <p>GST and Platform charge</p>
-                                <p>₹2500</p>
+                                <p>₹30</p>
                             </div>
                             <Divider />
                         </div>
                         <div className="flex justify-between my-2 text-gray-400">
                             <p>Total Pay</p>
-                            <p>₹5040</p>
+                            <p>₹{cart.cart?.total + 70}</p>
                         </div>
                     </div>
                 </section>
@@ -94,7 +119,7 @@ const Cart = () => {
                             Choose delivery address
                         </h1>
                         <div className="flex gap-5 flex-wrap justify-center ">
-                            {[1, 1, 1, 1].map((item, index) => {
+                            {auth.user?.addresses.map((item, index) => {
                                 return (
                                     <AddressCard
                                         key={index}
@@ -152,7 +177,9 @@ const Cart = () => {
                                             label="Street Address"
                                             fullWidth
                                             variant="outlined"
-                                            error={!ErrorMessage("streetAddress")}
+                                            error={
+                                                !ErrorMessage("streetAddress")
+                                            }
                                             helperText={
                                                 <ErrorMessage name="streetAddress">
                                                     {(msg) => (

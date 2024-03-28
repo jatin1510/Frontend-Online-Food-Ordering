@@ -1,18 +1,18 @@
 import { Button, Card } from '@mui/material'
 import React from 'react'
 
-const OrderCard = () => {
+const OrderCard = ({item, order}) => {
   return (
     <Card className='flex justify-between items-center p-5'>
         <div className='flex items-center space-x-5'>
-            <img className='h-20 w-20' src="https://cdn.pixabay.com/photo/2022/06/07/14/15/food-7248455_1280.png" alt="" />
+            <img className='h-20 w-20' src={item?.food?.images[0]} alt="" />
             <div>
-                <p>Pizza</p>
-                <p>$399</p>
+                <p>{item?.food.name}</p>
+                <p>${item.totalPrice}</p>
             </div>
         </div>
         <div>
-            <Button className='cursor-not-allowed '>Completed</Button>
+            <Button className='cursor-not-allowed '>{order.orderStatus}</Button>
         </div>
     </Card>
   )

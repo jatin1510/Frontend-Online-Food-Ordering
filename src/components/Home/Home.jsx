@@ -9,8 +9,8 @@ const Home = () => {
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
     const { restaurant } = useSelector((store) => store);
+
     useEffect(() => {
-        console.log("hello home");
         dispatch(getAllRestaurants(jwt));
     }, []);
 

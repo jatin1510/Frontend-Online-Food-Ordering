@@ -36,13 +36,12 @@ const LoginForm = () => {
                 <Typography variant="h5" className="text-center">
                     Login
                 </Typography>
-                <IconButton>
-                    <CloseIcon
-                        color="primary"
-                        onClick={() => {
-                            navigate("/");
-                        }}
-                    />
+                <IconButton
+                    onClick={() => {
+                        navigate("/");
+                    }}
+                >
+                    <CloseIcon color="primary" />
                 </IconButton>
             </div>
             <Formik
