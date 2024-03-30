@@ -1,25 +1,64 @@
 import {
+    Avatar,
     Box,
+    Button,
     Card,
     CardHeader,
+    Chip,
     IconButton,
     Paper,
+    Popover,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
     TableRow,
+    Typography,
 } from "@mui/material";
 import CreateIcon from "@mui/icons-material/Create";
 import React from "react";
 import { Delete } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-const orders = [1, 1, 1, 1, 1, 1, 1];
+import { useDispatch, useSelector } from "react-redux";
+import {
+    deleteMenuItem,
+    updateMenuItemAvailability,
+} from "../../State/Menu/Action";
+import { red } from "@mui/material/colors";
 const MenuTable = () => {
-    const navigate = useNavigate();
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handlePopoverOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handlePopoverClose = () => {
+        setAnchorEl(null);
+    };
+
+    const openPop = Boolean(anchorEl);
+
+    const dispatch = useDispatch();
     const { menu } = useSelector((store) => store);
+    const navigate = useNavigate();
+
+    const handleUpdateMenuItemStock = (id) => {
+        dispatch(
+            updateMenuItemAvailability({
+                menuItemId: id,
+                jwt: localStorage.getItem("jwt"),
+            })
+        );
+    };
+    const handleDeleteMenuItem = (id) => {
+        dispatch(
+            deleteMenuItem({
+                menuItemId: id,
+                jwt: localStorage.getItem("jwt"),
+            })
+        );
+    };
     return (
         <Box>
             <Card>
@@ -60,17 +99,88 @@ const MenuTable = () => {
                                         },
                                     }}
                                 >
-                                    <TableCell><img style={{height: '70px', width: '70px', borderRadius: "2rem"}} src={item.images[0]}></img></TableCell>
+                                    <TableCell>
+                                        <Avatar src={item.images[0]}/>
+                                    </TableCell>
                                     <TableCell>{item.name}</TableCell>
                                     <TableCell>
-                                        {"customer@gmail.com"}
+                                        <div className="space-x-2">
+                                            {item.ingredients.map(
+                                                (ingredient) => (
+                                                    <Chip
+                                                        // color={
+                                                        //     ingredient
+                                                        //         .inStock
+                                                        //         ? "success"
+                                                        //         : "error"
+                                                        // }
+                                                        color="info"
+                                                        variant="filled"
+                                                        label={ingredient.name}
+                                                    />
+                                                )
+                                            )}
+                                        </div>
                                     </TableCell>
-                                    <TableCell align="right">{item.price}</TableCell>
-                                    <TableCell align="center">
-                                        {item.available ? "Yes" : "No"}
+                                    <TableCell align="right">
+                                        ₹&nbsp;{item.price}
                                     </TableCell>
                                     <TableCell align="center">
-                                        <IconButton>
+                                        <Button
+                                            sx={{ width: "70%" }}
+                                            onClick={() => {
+                                                handleUpdateMenuItemStock(
+                                                    item.id
+                                                );
+                                            }}
+                                            aria-owns={
+                                                openPop
+                                                    ? "mouse-over-popover"
+                                                    : undefined
+                                            }
+                                            aria-haspopup="true"
+                                            onMouseEnter={handlePopoverOpen}
+                                            onMouseLeave={handlePopoverClose}
+                                            color={
+                                                item.available
+                                                    ? "success"
+                                                    : "error"
+                                            }
+                                        >
+                                            {item.available
+                                                ? "In Stock"
+                                                : "Out of Stock"}
+                                        </Button>
+                                        <Popover
+                                            id="mouse-over-popover"
+                                            sx={{
+                                                pointerEvents: "none",
+                                            }}
+                                            open={openPop}
+                                            anchorEl={anchorEl}
+                                            anchorOrigin={{
+                                                vertical: "top",
+                                                horizontal: "left",
+                                            }}
+                                            transformOrigin={{
+                                                vertical: "bottom",
+                                                horizontal: "left",
+                                            }}
+                                            onClose={handlePopoverClose}
+                                            disableRestoreFocus
+                                        >
+                                            <Typography sx={{ p: 1 }}>
+                                                {"Change Availability"}
+                                            </Typography>
+                                        </Popover>
+                                    </TableCell>
+                                    <TableCell align="center">
+                                        <IconButton
+                                            color="primary"
+                                            onClick={() => {
+                                                handleDeleteMenuItem(item.id);
+                                            }}
+                                        >
                                             <Delete />
                                         </IconButton>
                                     </TableCell>

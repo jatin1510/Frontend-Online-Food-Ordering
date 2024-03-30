@@ -24,8 +24,8 @@ const style = {
     transform: "translate(-50%, -50%)",
     width: 400,
     bgcolor: "background.paper",
-    border: "2px solid #000",
     boxShadow: 24,
+    borderRadius: 2,
     p: 4,
 };
 
@@ -80,7 +80,7 @@ const FoodCategoryTable = () => {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={style}>
+                <Box sx={style} border={"none"}>
                     <CreateFoodCategoryForm handleClose={handleClose} />
                 </Box>
             </Modal>

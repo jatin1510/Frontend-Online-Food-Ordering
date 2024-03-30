@@ -2,8 +2,9 @@ import { Button, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createCategory } from "../../State/Restaurant/Action";
+import { fireToast } from "../../Notification/Notification";
 
-const CreateFoodCategory = ({handleClose}) => {
+const CreateFoodCategory = ({ handleClose }) => {
     const { restaurant } = useSelector((store) => store);
     const dispatch = useDispatch();
 
@@ -29,13 +30,12 @@ const CreateFoodCategory = ({handleClose}) => {
             })
         );
         handleClose();
+        fireToast("Category Created Successfully", "success");
     };
     return (
         <div>
             <div className="p-5">
-                <h1 className="text-gray-200 text-center text-xl pb-10">
-                    Create Category
-                </h1>
+                <h1 className="text-center text-xl pb-10">Create Category</h1>
                 <form className="space-y-5" onSubmit={handleSubmit}>
                     <TextField
                         fullWidth

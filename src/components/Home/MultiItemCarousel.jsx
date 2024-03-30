@@ -7,7 +7,6 @@ import CarouselItem from "./CarouselItem";
 
 const MultiItemCarousel = () => {
     const settings = {
-        dots: true,
         infinite: true,
         speed: 500,
         slidesToShow: 5,
@@ -18,7 +17,7 @@ const MultiItemCarousel = () => {
     };
     return (
         <div>
-            <Slider {...settings} a>
+            <Slider {...settings}>
                 {topMeals.map((item, index) => {
                     return (
                         <CarouselItem

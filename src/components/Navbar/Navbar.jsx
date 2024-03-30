@@ -29,7 +29,7 @@ const Navbar = () => {
             <div className="flex items-center space-x-2 lg:space-x-10">
                 <div className="">
                     <IconButton>
-                        <SearchIcon sx={{ fontSize: "1.5rem" }} />
+                        <SearchIcon className="text-white" sx={{ fontSize: "1.5rem" }} />
                     </IconButton>
                 </div>
                 <div className="">
@@ -46,14 +46,14 @@ const Navbar = () => {
                                 navigate("/account/login");
                             }}
                         >
-                            <Person />
+                            <Person className="text-white" />
                         </IconButton>
                     )}
                 </div>
                 <div className="">
                     <IconButton onClick={()=>{auth.user ? navigate("/cart") : navigate("/account/login")}}>
                         <Badge color="primary" badgeContent={cart?.cartItems.length}>
-                            <ShoppingCartIcon sx={{ fontSize: "1.5rem" }} />
+                            <ShoppingCartIcon className="text-white" sx={{ fontSize: "1.5rem" }} />
                         </Badge>
                     </IconButton>
                 </div>

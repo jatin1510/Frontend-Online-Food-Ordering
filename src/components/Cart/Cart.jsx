@@ -92,21 +92,21 @@ const Cart = () => {
                     <div className="billDetails px-5 text-sm">
                         <p className="font-extralight py-5">Bill Details</p>
                         <div className="space-y-3">
-                            <div className="flex justify-between text-gray-400 ">
+                            <div className="flex justify-between">
                                 <p>Item total</p>
                                 <p>₹{cart.cart?.total}</p>
                             </div>
-                            <div className="flex justify-between text-gray-400 ">
+                            <div className="flex justify-between">
                                 <p>Delivery charge</p>
                                 <p>₹40</p>
                             </div>
-                            <div className="flex justify-between text-gray-400 ">
+                            <div className="flex justify-between">
                                 <p>GST and Platform charge</p>
                                 <p>₹30</p>
                             </div>
                             <Divider />
                         </div>
-                        <div className="flex justify-between my-2 text-gray-400">
+                        <div className="flex justify-between my-2">
                             <p>Total Pay</p>
                             <p>₹{cart.cart?.total + 70}</p>
                         </div>
@@ -135,7 +135,7 @@ const Cart = () => {
                             <Card className="flex flex-col justify-between">
                                 <div className="flex flex-col items-center gap-5 w-64 p-5">
                                     <AddLocationAltIcon />
-                                    <div className="space-y-3 text-gray-500">
+                                    <div className="space-y-3">
                                         <h1 className="font-semibold text-lg text-white">
                                             Add New Address
                                         </h1>

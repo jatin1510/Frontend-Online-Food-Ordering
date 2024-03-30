@@ -7,13 +7,13 @@ const AddressCard = ({ item, showButton, handleSelectAddress }) => {
         <Card>
             <div className="flex gap-5 w-64 p-5">
                 <HomeIcon />
-                <div className="space-y-3 text-gray-500">
+                <div className="space-y-3">
                     <h1 className="font-semibold text-lg text-white">Home</h1>
-                    <p className="text-gray-400">{item.streetAddress}</p>
-                    <p className="text-gray-400">
+                    <p >{item.streetAddress}</p>
+                    <p >
                         {item.city}, {item.stateProvince}
                     </p>
-                    <p className="text-gray-400">{item.country}</p>
+                    <p>{item.country}</p>
                 </div>
             </div>
             <div className="flex gap-5 w-64 p-2">

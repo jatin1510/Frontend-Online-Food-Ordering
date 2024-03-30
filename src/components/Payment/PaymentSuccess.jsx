@@ -14,11 +14,11 @@ const PaymentSuccess = () => {
                     <h1 className="py-5 text-2xl font-semibold">
                         Order Success !
                     </h1>
-                    <p className="py-3 text-center text-gray-300">
+                    <p className="py-3 text-center">
                         Thank you for choosing our restaurant! We appreciate
                         your order
                     </p>
-                    <p className="py-2 text-center to-gray-200 text-lg">
+                    <p className="py-2 text-center text-lg">
                         Have a Great Day
                     </p>
                     <Button

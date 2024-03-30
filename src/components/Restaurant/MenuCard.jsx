@@ -81,7 +81,7 @@ const MenuCard = ({ item }) => {
                                 <b>₹</b>
                                 {item.price}
                             </p>
-                            <p className="text-gray-400">{item.description}</p>
+                            <p>{item.description}</p>
                         </div>
                     </div>
                 </div>

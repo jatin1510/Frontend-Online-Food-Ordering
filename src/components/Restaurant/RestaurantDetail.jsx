@@ -69,7 +69,7 @@ const RestaurantDetail = () => {
     return (
         <div className="px-5 lg:px-20">
             <section>
-                <h3 className="text-gray-500 py-2 mt-10">
+                <h3 className="py-2 mt-10">
                     Home / {currentRestaurant?.address.country} /{" "}
                     {currentRestaurant?.name} / {currentRestaurant?.address.id}
                 </h3>
@@ -108,18 +108,18 @@ const RestaurantDetail = () => {
                     <h1 className="text-4xl font-semibold">
                         {currentRestaurant?.name}
                     </h1>
-                    <p className="text-gray-500 mt-1">
+                    <p className=" mt-1">
                         {currentRestaurant?.description}
                     </p>
                     <div className="space-y-3 mt-3">
-                        <div className="text-gray-500 flex items-center gap-3">
+                        <div className=" flex items-center gap-3">
                             <LocationOnIcon />
                             <span>
                                 {currentRestaurant?.address.city},{" "}
                                 {currentRestaurant?.address.stateProvince}
                             </span>
                         </div>
-                        <div className="text-gray-500 flex items-center gap-3">
+                        <div className=" flex items-center gap-3">
                             <CalendarMonthIcon />
                             <span>{currentRestaurant?.openingHours}</span>
                         </div>

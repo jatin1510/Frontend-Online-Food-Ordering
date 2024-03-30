@@ -31,7 +31,7 @@ const style = {
     transform: "translate(-50%, -50%)",
     width: 400,
     bgcolor: "background.paper",
-    border: "2px solid #000",
+    borderRadius: 2,
     boxShadow: 24,
     p: 4,
 };
@@ -99,7 +99,7 @@ const IngredientTable = () => {
                                 >
                                     <TableCell>{item.id}</TableCell>
                                     <TableCell>{item.name}</TableCell>
-                                    <TableCell>{item.category.name}</TableCell>
+                                    <TableCell sx={{ width: "30%" }}>{item.category.name}</TableCell>
                                     <TableCell align="right">
                                         <Button
                                             sx={{ width: "60%" }}

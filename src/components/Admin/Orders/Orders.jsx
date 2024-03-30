@@ -6,20 +6,38 @@ import {
     FormControlLabel,
     Radio,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import OrderTable from "./OrderTable";
+import { getRestaurantOrders } from "../../State/Restaurant Order/Action";
+import { useDispatch, useSelector } from "react-redux";
 const orderStatus = [
     { label: "All", value: "all" },
-    { label: "Completed", value: "completed" },
     { label: "Pending", value: "pending" },
+    { label: "Completed", value: "completed" },
+    { label: "Out for Delivery", value: "outForDelivery" },
+    { label: "Delivered", value: "delivered" },
 ];
+// TODO: If i have all the orders, why should i request backend for each filter?
 
 const Orders = () => {
-    const [filterValue, setFilterValue] = useState();
+    var [filterValue, setFilterValue] = useState("");
     const handleChangeFilter = (e, value) => {
         setFilterValue(value);
         console.log(filterValue);
     };
+
+    const dispatch = useDispatch();
+    const { restaurant, restaurantOrder } = useSelector((store) => store);
+    useEffect(() => {
+        filterValue = filterValue === "all" ? "" : filterValue;
+        dispatch(
+            getRestaurantOrders({
+                jwt: localStorage.getItem("jwt"),
+                restaurantId: restaurant.userRestaurant?.id,
+                orderStatus: filterValue.toUpperCase(),
+            })
+        );
+    }, [filterValue]);
 
     return (
         <div className="px-2 py-2 -z-10">
@@ -41,14 +59,15 @@ const Orders = () => {
                                     value={item.value}
                                     control={<Radio />}
                                     label={item.label}
-                                    sx={{ color: "gray" }}
                                 />
                             );
                         })}
                     </RadioGroup>
                 </FormControl>
             </Card>
-            <OrderTable/>
+            <div className="py-2">
+                <OrderTable />
+            </div>
         </div>
     );
 };

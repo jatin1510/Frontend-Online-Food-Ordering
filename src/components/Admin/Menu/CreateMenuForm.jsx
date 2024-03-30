@@ -24,18 +24,19 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getIngredients } from "../../State/Ingredients/Action";
 import { createMenuItem } from "../../State/Menu/Action";
+import { fireToast } from "../../Notification/Notification";
 
 const validationSchema = Yup.object({
     name: Yup.string().required("Menu name is required"),
     description: Yup.string().required("Description is required"),
     price: Yup.number("Price Must be Number").required("Price is required"),
     // foodCategory: {
-    category: Yup.string().required("Category is required"),
+    category: Yup.number().required("Category is required"),
     // },
     images: Yup.array().min(1, "At least one image is required"),
     isVegetarian: Yup.boolean().required("Vegetarian is required"),
     isSeasonal: Yup.boolean().required("Seasonal is required"),
-    ingredients: Yup.array().min(1, "At least one ingredient is required"),
+    ingredients: Yup.array(),
 });
 
 const CreateMenuForm = () => {
@@ -95,9 +96,11 @@ const CreateMenuForm = () => {
                 seasonal: values.isSeasonal,
                 ingredients: getIngredientsObjects(values.ingredients),
             };
-            console.log("Values: ", values);
-            console.log("Created data: ", menu);
+            // console.log("Values: ", values);
+            // console.log("Created data: ", menu);
             dispatch(createMenuItem({ menu, jwt }));
+            navigate("/admin/restaurant/menu");
+            fireToast("Menu Item Created Successfully", "success");
         },
     });
 
@@ -147,7 +150,7 @@ const CreateMenuForm = () => {
                             />
                             <label htmlFor="fileInput" className="relative">
                                 <span className="w-24 h-24 cursor-pointer flex items-center justify-center p-3 border rounded-md border-gray-600">
-                                    <AddPhotoAlternateIcon className="text-white" />
+                                    <AddPhotoAlternateIcon  />
                                 </span>
                                 {uploadingImage && (
                                     <div className="absolute left-0 right-0 top-0 bottom-0 w-24 h-24 flex justify-center items-center">
@@ -270,7 +273,7 @@ const CreateMenuForm = () => {
                                         return (
                                             <MenuItem
                                                 key={category.id}
-                                                value={category}
+                                                value={category.id}
                                             >
                                                 {category.name}
                                             </MenuItem>
@@ -337,7 +340,7 @@ const CreateMenuForm = () => {
                                             return (
                                                 <MenuItem
                                                     key={ingredient.id}
-                                                    value={ingredient}
+                                                    value={ingredient.name}
                                                 >
                                                     {ingredient.name}
                                                 </MenuItem>

@@ -9,6 +9,7 @@ import {
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createIngredientItem } from "../../State/Ingredients/Action";
+import { fireToast } from "../../Notification/Notification";
 
 const CreateIngredientItem = ({ handleClose }) => {
     const [FormData, setFormData] = useState({
@@ -36,13 +37,14 @@ const CreateIngredientItem = ({ handleClose }) => {
             restaurantId: restaurant.userRestaurant?.id,
         };
         dispatch(createIngredientItem({ jwt, data }));
+        fireToast("Ingredient Item Created", "success");
         handleClose();
     };
 
     return (
         <div>
             <div className="p-5">
-                <h1 className="text-gray-200 text-center text-xl pb-10">
+                <h1 className="text-center text-xl pb-10">
                     Create Ingredient Item
                 </h1>
                 <form className="space-y-5" onSubmit={handleSubmit}>

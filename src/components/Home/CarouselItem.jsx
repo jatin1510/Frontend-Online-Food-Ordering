@@ -8,9 +8,7 @@ const CarouselItem = ({ title, image }) => {
                 src={image}
                 alt=""
             />
-            <span className="py-5 font-semibold text-xl text-gray-400">
-                {title}
-            </span>
+            <span className="py-5 font-semibold text-xl">{title}</span>
         </div>
     );
 };

@@ -14,6 +14,8 @@ import * as Yup from "yup";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import { fireToast } from "../../Notification/Notification";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
     images: Yup.array().min(1, "Please upload at least one image").required(),
@@ -22,6 +24,7 @@ const validationSchema = Yup.object({
 });
 
 const CreateEventForm = () => {
+    const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
             images: [],
@@ -37,6 +40,8 @@ const CreateEventForm = () => {
             console.log("Form Values: ", values);
             console.log("Start Date: ", newStartDate);
             console.log("End Date: ", newEndDate);
+            navigate("/admin/restaurant/events");
+            fireToast("Event Created", "success");
         },
     });
 
@@ -76,7 +81,7 @@ const CreateEventForm = () => {
                             />
                             <label htmlFor="fileInput" className="relative">
                                 <span className="w-16 h-16 cursor-pointer flex items-center justify-center p-3 border rounded-md border-gray-600">
-                                    <AddPhotoAlternateIcon className="text-white" />
+                                    <AddPhotoAlternateIcon />
                                 </span>
                                 {uploadingImage && (
                                     <div className="absolute left-0 right-0 top-0 bottom-0 w-16 h-16 flex justify-center items-center">
