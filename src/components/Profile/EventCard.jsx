@@ -1,28 +1,47 @@
-import { Card, CardActions, CardContent, CardMedia, IconButton, Typography } from "@mui/material";
+import {
+    Card,
+    CardContent,
+    CardMedia,
+    Typography,
+} from "@mui/material";
 import React from "react";
-import DeleteIcon from "@mui/icons-material/Delete"
-const EventCard = () => {
+import { DateTimeField, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+
+const EventCard = ({ item }) => {
     return (
-        <Card sx={{width: 345}}>
-            <CardMedia sx={{height: 345}} image="https://images.pexels.com/photos/1199957/pexels-photo-1199957.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"/>
+        <Card sx={{ width: 345 }}>
+            <CardMedia sx={{ height: 345 }} image={item?.images[0]} />
             <CardContent>
-                <Typography variant="h5">
-                    Indian Fast Food
-                </Typography>
-                <Typography variant="body2">
-                    50% off on your first order
-                </Typography>
+                <Typography variant="h5">{item.restaurant.name}</Typography>
+                <Typography variant="body2">{item.description}</Typography>
                 <div className="py-2 space-y-2">
-                    <p>{"Mumbai"}</p>
-                    <p className="text-sm text-green-500">Starts at </p>
-                    <p className="text-sm text-red-500">Ends at </p>
+                    <p>{item.location}</p>
+                    <div className="flex flex-col gap-4 pt-3">
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DateTimeField
+                                disabled
+                                className="w-full"
+                                color="success"
+                                format="llll"
+                                label="Start Date and Time"
+                                value={dayjs(item?.startDateAndTime)}
+                            ></DateTimeField>
+                        </LocalizationProvider>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DateTimeField
+                                disabled
+                                className="w-full"
+                                color="error"
+                                label="End Date and Time"
+                                format="llll"
+                                value={dayjs(item?.endDateAndTime)}
+                            ></DateTimeField>
+                        </LocalizationProvider>
+                    </div>
                 </div>
             </CardContent>
-            {false && <CardActions>
-                <IconButton>
-                    <DeleteIcon className="text-red-400"/>
-                </IconButton>
-            </CardActions>}
         </Card>
     );
 };

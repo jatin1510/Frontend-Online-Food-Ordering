@@ -15,7 +15,7 @@ const Navbar = () => {
         if (auth.user?.role === "ROLE_CUSTOMER") {
             navigate("/profile");
         } else {
-            navigate("/admin/restaurant");
+            navigate("/admin/restaurant/");
         }
     };
 

@@ -7,23 +7,34 @@ import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import EventIcon from "@mui/icons-material/Event";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { Divider, Drawer, useMediaQuery } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../State/Authentication/Action";
+import { darkTheme } from "../../Theme/DarkTheme";
 
 const menu = [
-    { title: "Orders", icon: <ShoppingBagIcon /> },
-    { title: "Favorites", icon: <FavoriteIcon /> },
-    { title: "Address", icon: <HomeIcon /> },
-    { title: "Payments", icon: <AccountBalanceWalletIcon /> },
-    { title: "Notifications", icon: <NotificationsActiveIcon /> },
-    { title: "Events", icon: <EventIcon /> },
-    { title: "Logout", icon: <LogoutIcon /> },
+    { title: "Orders", icon: <ShoppingBagIcon />, path: "/orders" },
+    { title: "Favorites", icon: <FavoriteIcon />, path: "/favorites" },
+    { title: "Address", icon: <HomeIcon />, path: "/address" },
+    {
+        title: "Payments",
+        icon: <AccountBalanceWalletIcon />,
+        path: "/payments",
+    },
+    {
+        title: "Notifications",
+        icon: <NotificationsActiveIcon />,
+        path: "/notifications",
+    },
+    { title: "Events", icon: <EventIcon />, path: "/events" },
+    { title: "Logout", icon: <LogoutIcon />, path: "/logout" },
 ];
 const ProfileNavigation = ({ open, handleClose, setOpenSideBar }) => {
     const isSmallScreen = useMediaQuery("(max-width:900px)");
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const location = useLocation();
+    console.log(location.pathname.substring(8));
 
     const handleNavigate = (path) => {
         if (path === "logout") {
@@ -56,6 +67,14 @@ const ProfileNavigation = ({ open, handleClose, setOpenSideBar }) => {
                                         );
                                     }}
                                     className="px-5 flex items-center space-x-5 cursor-pointer"
+                                    style={{
+                                        color: `${
+                                            location.pathname.substring(8) ===
+                                            item.path
+                                                ? darkTheme.palette.primary.main
+                                                : ""
+                                        }`,
+                                    }}
                                 >
                                     {item.icon}
                                     <span className="text">{item.title}</span>

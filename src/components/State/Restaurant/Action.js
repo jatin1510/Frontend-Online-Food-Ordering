@@ -216,12 +216,12 @@ export const updateRestaurantStatus = ({ restaurantId, jwt }) => {
 };
 
 // TODO: Backend is pending for this request
-export const createEvent = ({ reqData, jwt, restaurantId }) => {
+export const createEvent = ({ reqData, jwt }) => {
     return async (dispatch) => {
         dispatch({ type: CREATE_EVENTS_REQUEST });
         try {
             const { data } = await api.post(
-                `/api/admin/events/${restaurantId}`,
+                `/api/admin/events`,
                 reqData,
                 {
                     headers: {

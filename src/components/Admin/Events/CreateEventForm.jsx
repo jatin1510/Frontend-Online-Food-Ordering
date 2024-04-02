@@ -15,16 +15,19 @@ import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { fireToast } from "../../Notification/Notification";
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { createEvent } from "../../State/Restaurant/Action";
 
 const validationSchema = Yup.object({
     images: Yup.array().min(1, "Please upload at least one image").required(),
     location: Yup.string().required("Location is required"),
     eventName: Yup.string().required("Event Name is required"),
+    description: Yup.string().required("Description is required"),
 });
 
-const CreateEventForm = () => {
-    const navigate = useNavigate();
+const CreateEventForm = ({ handleClose }) => {
+    const { restaurant } = useSelector((store) => store);
+    const dispatch = useDispatch();
     const formik = useFormik({
         initialValues: {
             images: [],
@@ -32,16 +35,28 @@ const CreateEventForm = () => {
             eventName: "",
             startDate: new dayjs(),
             endDate: new dayjs(),
+            description: "",
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            const newStartDate = values.startDate.format("DD-MM-YYYY HH:mm:ss");
-            const newEndDate = values.endDate.format("DD-MM-YYYY HH:mm:ss");
-            console.log("Form Values: ", values);
-            console.log("Start Date: ", newStartDate);
-            console.log("End Date: ", newEndDate);
-            navigate("/admin/restaurant/events");
+            const newStartDate = values.startDate.format("YYYY-MM-DD HH:mm");
+            const newEndDate = values.endDate.format("YYYY-MM-DD HH:mm");
+            const data = {
+                name: formik.values.eventName,
+                description: formik.values.description,
+                images: formik.values.images,
+                location: formik.values.location,
+                startDateAndTime: newStartDate,
+                endDateAndTime: newEndDate,
+                restaurantId: restaurant.userRestaurant?.id,
+            };
+            console.log(data);
+            dispatch(
+                createEvent({ reqData: data, jwt: localStorage.getItem("jwt") })
+            );
+
             fireToast("Event Created", "success");
+            handleClose();
         },
     });
 
@@ -125,25 +140,6 @@ const CreateEventForm = () => {
                         <Grid item xs={12}>
                             <TextField
                                 fullWidth
-                                id="location"
-                                name="location"
-                                label="Location"
-                                variant="outlined"
-                                onChange={formik.handleChange}
-                                value={formik.values.location}
-                                error={
-                                    formik.touched.location &&
-                                    Boolean(formik.errors.location)
-                                }
-                                helperText={
-                                    formik.touched.location &&
-                                    formik.errors.location
-                                }
-                            ></TextField>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                fullWidth
                                 id="eventName"
                                 name="eventName"
                                 label="Event Name"
@@ -160,6 +156,45 @@ const CreateEventForm = () => {
                                 }
                             ></TextField>
                         </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                id="description"
+                                name="description"
+                                label="Description"
+                                variant="outlined"
+                                onChange={formik.handleChange}
+                                value={formik.values.description}
+                                error={
+                                    formik.touched.description &&
+                                    Boolean(formik.errors.description)
+                                }
+                                helperText={
+                                    formik.touched.description &&
+                                    formik.errors.description
+                                }
+                            ></TextField>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                id="location"
+                                name="location"
+                                label="Location"
+                                variant="outlined"
+                                onChange={formik.handleChange}
+                                value={formik.values.location}
+                                error={
+                                    formik.touched.location &&
+                                    Boolean(formik.errors.location)
+                                }
+                                helperText={
+                                    formik.touched.location &&
+                                    formik.errors.location
+                                }
+                            ></TextField>
+                        </Grid>
+
                         <Grid item xs={12}>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DateTimePicker

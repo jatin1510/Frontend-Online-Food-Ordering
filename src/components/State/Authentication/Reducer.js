@@ -22,6 +22,7 @@ const initialState = {
     jwt: null,
     favorites: [],
     success: null,
+    registrationError: null,
 };
 
 export const authReducer = (state = initialState, action) => {
@@ -61,6 +62,13 @@ export const authReducer = (state = initialState, action) => {
             };
 
         case REGISTER_FAILURE:
+            return {
+                ...state,
+                isLoading: false,
+                registrationError: action.payload,
+                success: null,
+            };
+
         case LOGIN_FAILURE:
         case GET_USER_FAILURE:
         case ADD_TO_FAVORITE_FAILURE:

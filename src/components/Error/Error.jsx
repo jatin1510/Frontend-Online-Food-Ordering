@@ -41,7 +41,7 @@ const Error = () => {
             console.log(error);
             if (error.message === "Network Error") {
                 fireToast("Server Down! Please try again later.");
-            } else if (error?.code == "ERR_BAD_REQUEST") {
+            } else if (error?.code === "ERR_BAD_REQUEST") {
                 fireToast("Invalid Credentials! Please try again.");
             }
         }

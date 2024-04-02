@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Route, Routes } from "react-router-dom";
 import AdminRoute from "./AdminRoute";
 import CustomerRoute from "./CustomerRoute";
+
 import Error from "../Error/Error";
 import Notification from "../Notification/Notification";
 import { useTheme } from "@emotion/react";

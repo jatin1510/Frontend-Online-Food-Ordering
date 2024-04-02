@@ -1,7 +1,11 @@
 import { Box, Button, Modal } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import CreateEventForm from "./CreateEventForm";
+import { useDispatch, useSelector } from "react-redux";
+import { getRestaurantEvents } from "../../State/Restaurant/Action";
+import AdminEventCard from "./AdminEventCard";
+
 const style = {
     position: "absolute",
     top: "50%",
@@ -18,9 +22,23 @@ const Events = () => {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const { restaurant } = useSelector((store) => store);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(
+            getRestaurantEvents({
+                restaurantId: restaurant.userRestaurant?.id,
+                jwt: localStorage.getItem("jwt"),
+            })
+        );
+    }, []);
     return (
         <div>
-            <div className="p-5 flex flex-row-reverse">
+            <div className="p-10 flex flex-row justify-between">
+                <h1 className="text-xl text-center font-semibold">
+                    Events
+                </h1>
                 <Button
                     onClick={handleOpen}
                     variant="contained"
@@ -29,6 +47,13 @@ const Events = () => {
                     Create New Event
                 </Button>
             </div>
+            <div className="flex items-center flex-col">
+                <div className="px-5 flex flex-wrap gap-5 m-auto justify-center">
+                    {restaurant.restaurantsEvents.map((item, index) => {
+                        return <AdminEventCard key={index} item={item} />;
+                    })}
+                </div>
+            </div>
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -36,7 +61,7 @@ const Events = () => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <CreateEventForm />
+                    <CreateEventForm handleClose={handleClose} />
                 </Box>
             </Modal>
         </div>

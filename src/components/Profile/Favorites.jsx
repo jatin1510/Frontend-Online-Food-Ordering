@@ -10,7 +10,7 @@ const Favorites = () => {
             <h1 className="text-xl text-center py-7 font-semibold">
                 My Favorites
             </h1>
-            <div className="flex flex-wrap gap-3 justify-center">
+            <div className="flex flex-wrap gap-4 justify-center">
                 {auth.favorites.map((item, index) => {
                     return <RestaurantCard key={index} item={item} />;
                 })}

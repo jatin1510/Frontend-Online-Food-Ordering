@@ -124,7 +124,7 @@ const CreateRestaurantForm = () => {
                             />
                             <label htmlFor="fileInput" className="relative">
                                 <span className="w-24 h-24 cursor-pointer flex items-center justify-center p-3 border rounded-md border-gray-600">
-                                    <AddPhotoAlternateIcon className="text-white" />
+                                    <AddPhotoAlternateIcon />
                                 </span>
                                 {uploadingImage && (
                                     <div className="absolute left-0 right-0 top-0 bottom-0 w-24 h-24 flex justify-center items-center">

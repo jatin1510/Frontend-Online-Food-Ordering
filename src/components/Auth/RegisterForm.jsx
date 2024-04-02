@@ -13,7 +13,7 @@ import {
     IconButton,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../State/Authentication/Action";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -43,9 +43,10 @@ const RegisterForm = () => {
     const handleSubmit = (values) => {
         dispatch(registerUser({ userData: values, navigate }));
     };
+    const { auth } = useSelector((store) => store);
     return (
         <div>
-            <div className="flex flex-row justify-between pb-5">
+            <div className="flex flex-row justify-between">
                 <Typography variant="h5" className="text-center">
                     Register
                 </Typography>
@@ -57,108 +58,130 @@ const RegisterForm = () => {
                     <CloseIcon color="primary" />
                 </IconButton>
             </div>
-            <Formik
-                initialValues={initialValues}
-                validationSchema={validationSchema}
-                onSubmit={handleSubmit}
-            >
-                {({ errors, touched }) => (
-                    <Form>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <Field
-                                    as={TextField}
-                                    name="fullName"
-                                    label="Full Name"
-                                    fullWidth
-                                    variant="outlined"
-                                    error={Boolean(errors.fullName && touched.fullName)}
-                                    helperText={
-                                        <ErrorMessage name="fullName">
-                                            {(msg) => (
-                                                <span className="text-red-600">
-                                                    {msg}
-                                                </span>
-                                            )}
-                                        </ErrorMessage>
-                                    }
-                                ></Field>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Field
-                                    as={TextField}
-                                    name="email"
-                                    label="Email Address"
-                                    fullWidth
-                                    variant="outlined"
-                                    error={Boolean(errors.email && touched.email)}
-                                    helperText={
-                                        <ErrorMessage name="email">
-                                            {(msg) => (
-                                                <span className="text-red-600">
-                                                    {msg}
-                                                </span>
-                                            )}
-                                        </ErrorMessage>
-                                    }
-                                ></Field>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Field
-                                    as={TextField}
-                                    name="password"
-                                    label="Password"
-                                    fullWidth
-                                    variant="outlined"
-                                    error={Boolean(errors.password && touched.password)}
-                                    helperText={
-                                        <ErrorMessage name="password">
-                                            {(msg) => (
-                                                <span className="text-red-600">
-                                                    {msg}
-                                                </span>
-                                            )}
-                                        </ErrorMessage>
-                                    }
-                                ></Field>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">
-                                        Role
-                                    </InputLabel>
+            {auth.registrationError && (
+                <div>
+                    <Typography className="p-2 text-center text-red-600">
+                        {auth.registrationError.response?.data.message}
+                    </Typography>
+                </div>
+            )}
+            <div className="mt-5">
+                <Formik
+                    initialValues={initialValues}
+                    validationSchema={validationSchema}
+                    onSubmit={handleSubmit}
+                >
+                    {({ errors, touched }) => (
+                        <Form>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
                                     <Field
-                                        as={Select}
-                                        name="role"
-                                        label="Role"
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
-                                        error={Boolean(errors.role && touched.role)}
+                                        as={TextField}
+                                        name="fullName"
+                                        label="Full Name"
+                                        fullWidth
+                                        variant="outlined"
+                                        error={Boolean(
+                                            errors.fullName && touched.fullName
+                                        )}
+                                        helperText={
+                                            <ErrorMessage name="fullName">
+                                                {(msg) => (
+                                                    <span className="text-red-600">
+                                                        {msg}
+                                                    </span>
+                                                )}
+                                            </ErrorMessage>
+                                        }
+                                    ></Field>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Field
+                                        as={TextField}
+                                        name="email"
+                                        label="Email Address"
+                                        fullWidth
+                                        variant="outlined"
+                                        error={Boolean(
+                                            (errors.email && touched.email) ||
+                                                auth.registrationError
+                                        )}
+                                        helperText={
+                                            <ErrorMessage name="email">
+                                                {(msg) => (
+                                                    <span className="text-red-600">
+                                                        {msg}
+                                                    </span>
+                                                )}
+                                            </ErrorMessage>
+                                        }
+                                    ></Field>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Field
+                                        as={TextField}
+                                        name="password"
+                                        label="Password"
+                                        fullWidth
+                                        variant="outlined"
+                                        error={Boolean(
+                                            errors.password && touched.password
+                                        )}
+                                        helperText={
+                                            <ErrorMessage name="password">
+                                                {(msg) => (
+                                                    <span className="text-red-600">
+                                                        {msg}
+                                                    </span>
+                                                )}
+                                            </ErrorMessage>
+                                        }
+                                    ></Field>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <FormControl fullWidth>
+                                        <InputLabel id="demo-simple-select-label">
+                                            Role
+                                        </InputLabel>
+                                        <Field
+                                            as={Select}
+                                            name="role"
+                                            label="Role"
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            error={Boolean(
+                                                errors.role && touched.role
+                                            )}
+                                        >
+                                            <MenuItem value="ROLE_CUSTOMER">
+                                                Customer
+                                            </MenuItem>
+                                            <MenuItem value="ROLE_RESTAURANT_OWNER">
+                                                Restaurant Owner
+                                            </MenuItem>
+                                        </Field>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Button
+                                        sx={{ mt: 1, padding: "15px" }}
+                                        variant="outlined"
+                                        type="submit"
+                                        color="primary"
+                                        fullWidth
                                     >
-                                        <MenuItem value="ROLE_CUSTOMER">
-                                            Customer
-                                        </MenuItem>
-                                        <MenuItem value="ROLE_RESTAURANT_OWNER">
-                                            Restaurant Owner
-                                        </MenuItem>
-                                    </Field>
-                                </FormControl>
+                                        Register
+                                    </Button>
+                                </Grid>
                             </Grid>
-                            <Grid item xs={12}>
-                                <Button
-                                    sx={{ mt: 1, padding: "15px" }}
-                                    variant="outlined"
-                                    type="submit"
-                                    color="primary"
-                                    fullWidth
-                                >
-                                    Register
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </Form>
-                )}
-            </Formik>
+                        </Form>
+                    )}
+                </Formik>
+            </div>
+            <Typography variant="body2" align="center" sx={{ mt: 3 }}>
+                By signing up, you agree to our Terms, Data Policy and Cookies
+                Policy.
+            </Typography>
             <Typography variant="body2" align="center" sx={{ mt: 3 }}>
                 Already have an account? &nbsp;
                 <Button
