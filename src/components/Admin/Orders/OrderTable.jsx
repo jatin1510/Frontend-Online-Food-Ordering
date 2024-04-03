@@ -22,6 +22,10 @@ import {
     getRestaurantOrders,
     updateOrderStatus,
 } from "../../State/Restaurant Order/Action";
+import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
+import { TreeItem } from "@mui/x-tree-view/TreeItem";
+import { hover } from "@testing-library/user-event/dist/hover";
+
 const orderStatus = [
     { label: "Out for Delivery", value: "OUT_FOR_DELIVERY" },
     { label: "Delivered", value: "DELIVERED" },
@@ -31,9 +35,8 @@ const orderStatus = [
 
 const OrderTable = ({ filterValue = "all" }) => {
     const dispatch = useDispatch();
-    const { restaurant, restaurantOrder } = useSelector(
-        (store) => store
-    );
+    const { restaurant, restaurantOrder } = useSelector((store) => store);
+
     console.log("restaurant Orders:", restaurantOrder.orders);
     useEffect(() => {
         let filter = filterValue === "all" ? "" : filterValue;
@@ -79,8 +82,7 @@ const OrderTable = ({ filterValue = "all" }) => {
                                 <TableCell align="center">Image</TableCell>
                                 <TableCell>Customer</TableCell>
                                 <TableCell align="right">Price</TableCell>
-                                <TableCell>Name</TableCell>
-                                <TableCell>Ingredients</TableCell>
+                                <TableCell>Items</TableCell>
                                 <TableCell>Status</TableCell>
                                 <TableCell>Update</TableCell>
                             </TableRow>
@@ -121,24 +123,40 @@ const OrderTable = ({ filterValue = "all" }) => {
                                             {item.totalPrice}
                                         </TableCell>
                                         <TableCell>
-                                            {item.items.map((orderItem) => {
-                                                return orderItem.food.name;
-                                            })}
-                                        </TableCell>
-                                        <TableCell className="space-x-2">
-                                            {item.items.map((orderItem) => {
-                                                return orderItem.ingredients.map(
-                                                    (ingredient) => {
-                                                        return (
-                                                            <Chip
-                                                                label={
+                                            <SimpleTreeView>
+                                                {item.items.map((orderItem) => {
+                                                    return (
+                                                        <TreeItem
+                                                            itemId={
+                                                                orderItem.id
+                                                            }
+                                                            label={
+                                                                orderItem.food
+                                                                    .name
+                                                            }
+                                                        >
+                                                            {orderItem.ingredients.map(
+                                                                (
                                                                     ingredient
+                                                                ) => {
+                                                                    return (
+                                                                        <TreeItem
+                                                                        sx={{ "&:hover": { background: "none" } }}
+                                                                            itemId={
+                                                                                ingredient
+                                                                            }
+                                                                            label={
+                                                                                "- " +
+                                                                                ingredient
+                                                                            }
+                                                                        />
+                                                                    );
                                                                 }
-                                                            ></Chip>
-                                                        );
-                                                    }
-                                                );
-                                            })}
+                                                            )}
+                                                        </TreeItem>
+                                                    );
+                                                })}
+                                            </SimpleTreeView>
                                         </TableCell>
                                         <TableCell>
                                             {item.orderStatus}
@@ -173,7 +191,7 @@ const OrderTable = ({ filterValue = "all" }) => {
                                                 {orderStatus.map((status) => {
                                                     return (
                                                         <MenuItem
-                                                            onClick={() =>
+                                                            onClick={(e) =>
                                                                 handleUpdateOrderStatus(
                                                                     item.id,
                                                                     status.value

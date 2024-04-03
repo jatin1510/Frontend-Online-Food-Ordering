@@ -7,9 +7,18 @@ import {
     CLEAR_CART_FAILURE,
     CLEAR_CART_REQUEST,
     CLEAR_CART_SUCCESS,
+    CREATE_ADDRESS_FAILURE,
+    CREATE_ADDRESS_REQUEST,
+    CREATE_ADDRESS_SUCCESS,
+    DELETE_ADDRESS_FAILURE,
+    DELETE_ADDRESS_REQUEST,
+    DELETE_ADDRESS_SUCCESS,
     FIND_CART_FAILURE,
     FIND_CART_REQUEST,
     FIND_CART_SUCCESS,
+    GET_ALL_ADDRESSES_FAILURE,
+    GET_ALL_ADDRESSES_REQUEST,
+    GET_ALL_ADDRESSES_SUCCESS,
     GET_ALL_CART_ITEMS_FAILURE,
     GET_ALL_CART_ITEMS_REQUEST,
     GET_ALL_CART_ITEMS_SUCCESS,
@@ -63,7 +72,6 @@ export const getAllCartItems = (req) => {
 };
 
 export const addItemToCart = (req) => {
-    
     return async (dispatch) => {
         dispatch({ type: ADD_ITEM_TO_CART_REQUEST });
         try {
@@ -127,7 +135,7 @@ export const clearCart = () => {
     return async (dispatch) => {
         dispatch({ type: CLEAR_CART_REQUEST });
         try {
-            const { data } = await api.delete(`/api/carts/clear`, {
+            const { data } = await api.delete(`/api/cart/clear`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("jwt")}`,
                 },
@@ -138,6 +146,63 @@ export const clearCart = () => {
         } catch (error) {
             console.log("Clear cart error: ", error);
             dispatch({ type: CLEAR_CART_FAILURE, payload: error });
+        }
+    };
+};
+
+export const createAddress = (req) => {
+    return async (dispatch) => {
+        dispatch({ type: CREATE_ADDRESS_REQUEST });
+        try {
+            const { data } = await api.post(`/api/address`, req.data, {
+                headers: {
+                    Authorization: `Bearer ${req.jwt}`,
+                },
+            });
+
+            console.log("Create address data: ", data);
+            dispatch({ type: CREATE_ADDRESS_SUCCESS, payload: data });
+        } catch (error) {
+            console.log("Create address error: ", error);
+            dispatch({ type: CREATE_ADDRESS_FAILURE, payload: error });
+        }
+    };
+};
+
+export const deleteAddress = (req) => {
+    return async (dispatch) => {
+        dispatch({ type: DELETE_ADDRESS_REQUEST });
+        try {
+            const { data } = await api.delete(`/api/address/${req.id}`, {
+                headers: {
+                    Authorization: `Bearer ${req.jwt}`,
+                },
+            });
+
+            console.log("Delete address data: ", data);
+            dispatch({ type: DELETE_ADDRESS_SUCCESS, payload: req.id });
+        } catch (error) {
+            console.log("Delete address error: ", error);
+            dispatch({ type: DELETE_ADDRESS_FAILURE, payload: error });
+        }
+    };
+};
+
+export const getAllAddress = (jwt) => {
+    return async (dispatch) => {
+        dispatch({ type: GET_ALL_ADDRESSES_REQUEST });
+        try {
+            const { data } = await api.get(`/api/address`, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            });
+
+            console.log("Get all addresses data: ", data);
+            dispatch({ type: GET_ALL_ADDRESSES_SUCCESS, payload: data });
+        } catch (error) {
+            console.log("Get all addresses error: ", error);
+            dispatch({ type: GET_ALL_ADDRESSES_FAILURE, payload: error });
         }
     };
 };

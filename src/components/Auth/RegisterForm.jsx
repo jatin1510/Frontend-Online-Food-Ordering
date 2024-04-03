@@ -119,6 +119,7 @@ const RegisterForm = () => {
                                 </Grid>
                                 <Grid item xs={12}>
                                     <Field
+                                        type="password"
                                         as={TextField}
                                         name="password"
                                         label="Password"
@@ -190,6 +191,7 @@ const RegisterForm = () => {
                     onClick={() => {
                         navigate("/account/login");
                     }}
+                    sx={{ "&:hover": { background: "none" } }}
                 >
                     Login
                 </Button>

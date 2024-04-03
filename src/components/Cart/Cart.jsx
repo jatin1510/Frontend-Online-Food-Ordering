@@ -6,8 +6,9 @@ import {
     Grid,
     Modal,
     TextField,
+    Tooltip,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CartItem from "./CartItem";
 import AddressCard from "./AddressCard";
 import AddLocationAltIcon from "@mui/icons-material/AddLocationAlt";
@@ -15,6 +16,8 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { createOrder } from "../State/Orders/Action";
+import { clearCart, createAddress, getAllAddress } from "../State/Cart/Action";
+import { fireToast } from "../Notification/Notification";
 
 export const style = {
     position: "absolute",
@@ -49,32 +52,47 @@ const validationSchema = new Yup.ObjectSchema({
 
 const Cart = () => {
     const dispatch = useDispatch();
-    const { cart, auth } = useSelector((store) => store);
-    const createOrderUsingSelectedAddress = (index) => {
-        console.log("chosen address");
-    };
-    const handleAddressOpenModal = () => {
-        setOpen(true);
+    const { cart } = useSelector((store) => store);
+    const [hasChosen, setHasChosen] = useState(false);
+    const [selectedAddress, setSelectedAddress] = useState(null);
+    useEffect(() => {
+        dispatch(getAllAddress(localStorage.getItem("jwt")));
+    }, []);
+    const chooseAddress = (item) => {
+        setSelectedAddress(item);
+        setHasChosen(true);
     };
 
     // Modal handlers
     const [open, setOpen] = React.useState(false);
     const handleClose = () => setOpen(false);
-    const handleSubmit = (values) => {
+    const handleAddressOpenModal = () => setOpen(true);
+    const createOrderRequest = () => {
         const req = {
             jwt: localStorage.getItem("jwt"),
             data: {
                 restaurantId: cart.cartItems[0].food?.restaurant.id,
-                deliveryAddress: {
-                    streetAddress: values.streetAddress,
-                    city: values.city,
-                    stateProvince: values.state,
-                    postalCode: values.pincode,
-                    country: values.country,
-                },
+                deliveryAddress: selectedAddress,
             },
         };
         dispatch(createOrder(req));
+    };
+
+    const handleAddressSubmit = (values) => {
+        console.log(values);
+        const req = {
+            jwt: localStorage.getItem("jwt"),
+            data: {
+                streetAddress: values.streetAddress,
+                city: values.city,
+                stateProvince: values.state,
+                postalCode: values.pincode,
+                country: values.country,
+            },
+        };
+        dispatch(createAddress(req));
+        fireToast("Address added successfully");
+        handleClose();
     };
 
     return (
@@ -113,46 +131,75 @@ const Cart = () => {
                     </div>
                 </section>
                 <Divider orientation="vertical" flexItem />
-                <section className="lg:w-[70%] flex justify-center px-5 pb-10 lg:pb-0">
-                    <div>
-                        <h1 className="text-center font-semibold text-2xl py-10">
-                            Choose delivery address
-                        </h1>
-                        <div className="flex gap-5 flex-wrap justify-center ">
-                            {auth.user?.addresses.map((item, index) => {
-                                return (
-                                    <AddressCard
-                                        key={index}
-                                        handleSelectAddress={createOrderUsingSelectedAddress(
-                                            index
-                                        )}
-                                        item={item}
-                                        showButton={true}
-                                    />
-                                );
-                            })}
+                <section className="lg:w-[70%] h-[90vh] flex flex-col justify-between px-5 pb-10 lg:pb-0">
+                    {cart.cartItems.length > 0 && (
+                        <div>
+                            <h1 className="text-center font-semibold text-2xl py-10">
+                                Choose delivery address
+                            </h1>
+                            <div className="flex gap-5 flex-wrap justify-center">
+                                {cart?.addresses.map((item, index) => {
+                                    return (
+                                        <AddressCard
+                                            chosen={
+                                                selectedAddress?.id === item.id
+                                            }
+                                            key={index}
+                                            chooseAddress={chooseAddress}
+                                            item={item}
+                                            showButton={true}
+                                        />
+                                    );
+                                })}
 
-                            <Card className="flex flex-col justify-between">
-                                <div className="flex flex-col items-center gap-5 w-64 p-5">
-                                    <AddLocationAltIcon />
-                                    <div className="space-y-3">
-                                        <h1 className="font-semibold text-lg text-white">
-                                            Add New Address
-                                        </h1>
+                                <Card className="flex flex-col justify-between h-[auto]">
+                                    <div className="flex flex-col items-center gap-5 w-64 p-5">
+                                        <AddLocationAltIcon />
+                                        <div className="space-y-3">
+                                            <h1 className="font-semibold text-lg text-white">
+                                                Add New Address
+                                            </h1>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="flex gap-5 w-64 p-2">
-                                    <Button
-                                        variant="contained"
-                                        fullWidth
-                                        onClick={handleAddressOpenModal}
-                                    >
-                                        Add
-                                    </Button>
-                                </div>
-                            </Card>
+                                    <div className="flex gap-5 w-64 p-2">
+                                        <Button
+                                            variant="outlined"
+                                            fullWidth
+                                            onClick={handleAddressOpenModal}
+                                        >
+                                            Add New Address
+                                        </Button>
+                                    </div>
+                                </Card>
+                            </div>
                         </div>
-                    </div>
+                    )}
+                    {cart.cartItems.length > 0 && (
+                        <div>
+                            <Tooltip
+                                title={
+                                    !hasChosen
+                                        ? "Please Choose Address"
+                                        : "Proceed to pay"
+                                }
+                                arrow
+                                placement="top"
+                            >
+                                <Button
+                                    fullWidth
+                                    variant="contained"
+                                    style={{
+                                        cursor: !hasChosen
+                                            ? "not-allowed"
+                                            : "pointer",
+                                    }}
+                                    onClick={createOrderRequest}
+                                >
+                                    Proceed to pay ₹{cart.cart?.total + 70}
+                                </Button>
+                            </Tooltip>
+                        </div>
+                    )}
                 </section>
             </main>
             <Modal
@@ -165,7 +212,7 @@ const Cart = () => {
                     <Formik
                         initialValues={initialValues}
                         validationSchema={validationSchema}
-                        onSubmit={handleSubmit}
+                        onSubmit={handleAddressSubmit}
                     >
                         {({ errors, touched }) => (
                             <Form>
@@ -252,7 +299,7 @@ const Cart = () => {
                                         <Field
                                             as={TextField}
                                             name="pincode"
-                                            label="pincode"
+                                            label="Pincode"
                                             fullWidth
                                             variant="outlined"
                                             error={!ErrorMessage("pincode")}

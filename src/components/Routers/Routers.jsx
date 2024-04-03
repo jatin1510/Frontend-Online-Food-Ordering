@@ -33,8 +33,8 @@ const Routers = () => {
                 sx={{
                     zIndex: 1000,
                     position: "fixed",
-                    bottom: 35,
-                    right: 35,
+                    bottom: 60,
+                    right: 30,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -77,8 +77,8 @@ const Routers = () => {
                 >
                     <Typography sx={{ p: 1 }}>
                         {theme.palette.mode === "dark"
-                            ? "Light Mode"
-                            : "Dark Mode"}
+                            ? "Enable Light Mode"
+                            : "Enable Dark Mode"}
                     </Typography>
                 </Popover>
             </Box>

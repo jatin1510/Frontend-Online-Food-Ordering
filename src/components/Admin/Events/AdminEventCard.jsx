@@ -46,6 +46,7 @@ const AdminEventCard = ({ item }) => {
                                 format="llll"
                                 label="Start Date and Time"
                                 value={dayjs(item?.startDateAndTime)}
+                                focused
                             ></DateTimeField>
                         </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -55,6 +56,7 @@ const AdminEventCard = ({ item }) => {
                                 label="End Date and Time"
                                 format="llll"
                                 value={dayjs(item?.endDateAndTime)}
+                                focused
                             ></DateTimeField>
                         </LocalizationProvider>
                     </div>

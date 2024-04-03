@@ -14,19 +14,22 @@ function App() {
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
     const { auth } = useSelector((store) => store);
+    const role = localStorage.getItem("role");
 
     useEffect(() => {
-        dispatch(getUser(auth.jwt || jwt));
+        if (localStorage.getItem("jwt") !== null) {
+            dispatch(getUser(auth.jwt || jwt));
+        }
 
-        // if (auth.user?.role === "ROLE_CUSTOMER") {
-        dispatch(findCart({ jwt: auth.jwt || jwt }));
-        // }
+        if (role === "ROLE_CUSTOMER") {
+            dispatch(findCart({ jwt: auth.jwt || jwt }));
+        }
     }, [auth.jwt]);
 
     useEffect(() => {
-        // if (auth.user?.role === "ROLE_RESTAURANT_OWNER") {
-        dispatch(getRestaurantByUserId(auth.jwt || jwt));
-        // }
+        if (role === "ROLE_RESTAURANT_OWNER") {
+            dispatch(getRestaurantByUserId(auth.jwt || jwt));
+        }
     }, [auth.user]);
 
     const [mode, setMode] = useState("light");

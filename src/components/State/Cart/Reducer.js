@@ -6,6 +6,7 @@ const initialState = {
     cartItems: [],
     loading: false,
     error: null,
+    addresses: [],
 };
 
 export const cartReducer = (state = initialState, action) => {
@@ -16,6 +17,9 @@ export const cartReducer = (state = initialState, action) => {
         case actionTypes.ADD_ITEM_TO_CART_REQUEST:
         case actionTypes.UPDATE_CART_ITEM_REQUEST:
         case actionTypes.REMOVE_CART_ITEM_REQUEST:
+        case actionTypes.CREATE_ADDRESS_REQUEST:
+        case actionTypes.DELETE_ADDRESS_REQUEST:
+        case actionTypes.GET_ALL_ADDRESSES_REQUEST:
             return {
                 ...state,
                 loading: true,
@@ -56,12 +60,38 @@ export const cartReducer = (state = initialState, action) => {
                 ),
             };
 
+        case actionTypes.CREATE_ADDRESS_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                addresses: [...state.addresses, action.payload],
+            };
+
+        case actionTypes.DELETE_ADDRESS_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                addresses: state.addresses.filter(
+                    (address) => address.id !== action.payload
+                ),
+            };
+
+        case actionTypes.GET_ALL_ADDRESSES_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                addresses: action.payload,
+            };
+
         case actionTypes.FIND_CART_FAILURE:
         case actionTypes.CLEAR_CART_FAILURE:
         case actionTypes.GET_ALL_CART_ITEMS_FAILURE:
         case actionTypes.ADD_ITEM_TO_CART_FAILURE:
         case actionTypes.UPDATE_CART_ITEM_FAILURE:
         case actionTypes.REMOVE_CART_ITEM_FAILURE:
+        case actionTypes.CREATE_ADDRESS_FAILURE:
+        case actionTypes.DELETE_ADDRESS_FAILURE:
+        case actionTypes.GET_ALL_ADDRESSES_FAILURE:
             return {
                 ...state,
                 loading: false,

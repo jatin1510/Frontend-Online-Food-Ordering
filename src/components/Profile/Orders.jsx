@@ -18,7 +18,9 @@ const Orders = () => {
                 My Orders
             </h1>
             <div className="space-y-5 w-full lg:w-1/2">
-                {order.orders.map((order, index) => order.items.map((it, idx) => <OrderCard order={order} item={it}/>))}
+                {order.orders.map((order, index) => (
+                    <OrderCard order={order} key={index}/>
+                ))}
             </div>
         </div>
     );

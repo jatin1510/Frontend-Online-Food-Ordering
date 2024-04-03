@@ -215,7 +215,6 @@ export const updateRestaurantStatus = ({ restaurantId, jwt }) => {
     };
 };
 
-// TODO: Backend is pending for this request
 export const createEvent = ({ reqData, jwt }) => {
     return async (dispatch) => {
         dispatch({ type: CREATE_EVENTS_REQUEST });
@@ -244,7 +243,6 @@ export const createEvent = ({ reqData, jwt }) => {
     };
 };
 
-// TODO: Backend is pending for this request
 export const getAllEvents = ({ jwt }) => {
     return async (dispatch) => {
         dispatch({ type: GET_ALL_EVENTS_REQUEST });
@@ -269,7 +267,6 @@ export const getAllEvents = ({ jwt }) => {
     };
 };
 
-// TODO: Backend is pending for this request
 export const deleteEvent = ({ eventId, jwt }) => {
     return async (dispatch) => {
         dispatch({ type: DELETE_EVENTS_REQUEST });
@@ -294,7 +291,6 @@ export const deleteEvent = ({ eventId, jwt }) => {
     };
 };
 
-// TODO: Backend is pending for this request
 export const getRestaurantEvents = ({ restaurantId, jwt }) => {
     return async (dispatch) => {
         dispatch({ type: GET_RESTAURANT_EVENTS_REQUEST });

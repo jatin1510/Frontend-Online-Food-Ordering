@@ -7,6 +7,7 @@ import {
     Grid,
     IconButton,
     Switch,
+    Tooltip,
     styled,
 } from "@mui/material";
 import React from "react";
@@ -89,12 +90,23 @@ const RestaurantDetails = () => {
                                 <div className="flex justify-between">
                                     <span>Restaurant</span>
                                     <span>
-                                        <Android12Switch
-                                            checked={
+                                        <Tooltip
+                                            title={
                                                 restaurant.userRestaurant?.open
+                                                    ? "Close Restaurant"
+                                                    : "Open Restaurant"
                                             }
-                                            onClick={handleRestaurantStatus}
-                                        />
+                                            arrow
+                                            placement="top-end"
+                                        >
+                                            <Android12Switch
+                                                checked={
+                                                    restaurant.userRestaurant
+                                                        ?.open
+                                                }
+                                                onClick={handleRestaurantStatus}
+                                            />
+                                        </Tooltip>
                                     </span>
                                 </div>
                             }

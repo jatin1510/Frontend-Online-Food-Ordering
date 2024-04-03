@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { addItemToCart, updateCartItem } from "../State/Cart/Action";
 import { useNavigate } from "react-router-dom";
+import { fireToast } from "../Notification/Notification";
 
 const MenuCard = ({ item }) => {
     const navigate = useNavigate();
@@ -25,7 +26,7 @@ const MenuCard = ({ item }) => {
         }
     };
 
-    const handleUpdateCartItem = ({value, id}) => {
+    const handleUpdateCartItem = ({ value, id }) => {
         const req = {
             jwt,
             data: {
@@ -41,11 +42,16 @@ const MenuCard = ({ item }) => {
         var array1 = selectedIngredients;
         for (const cartItem of cart.cartItems) {
             var array2 = cartItem.ingredients;
-            var is_same = (array1.length === array2.length) && array1.every((element, index) => {
-                return element === array2[index]; 
-            });
+            var is_same =
+                array1.length === array2.length &&
+                array1.every((element, index) => {
+                    return element === array2[index];
+                });
             if (is_same && cartItem.food.id === item.id) {
-                handleUpdateCartItem({value: cartItem.quantity + 1, id: cartItem.id});
+                handleUpdateCartItem({
+                    value: cartItem.quantity + 1,
+                    id: cartItem.id,
+                });
                 navigate("/cart");
                 return;
             }
@@ -59,6 +65,7 @@ const MenuCard = ({ item }) => {
             },
         };
         dispatch(addItemToCart(req));
+        fireToast("Item added to cart");
     };
 
     return (

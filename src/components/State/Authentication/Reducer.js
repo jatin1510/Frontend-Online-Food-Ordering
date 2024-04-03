@@ -23,6 +23,7 @@ const initialState = {
     favorites: [],
     success: null,
     registrationError: null,
+    loginError: null,
 };
 
 export const authReducer = (state = initialState, action) => {
@@ -70,6 +71,13 @@ export const authReducer = (state = initialState, action) => {
             };
 
         case LOGIN_FAILURE:
+            return {
+                ...state,
+                isLoading: false,
+                loginError: action.payload,
+                success: null,
+            };
+
         case GET_USER_FAILURE:
         case ADD_TO_FAVORITE_FAILURE:
             return {

@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import { green } from "@mui/material/colors";
 import { Button, Card } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { clearCart } from "../State/Cart/Action";
 
 const PaymentSuccess = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    useEffect(() => {
+        dispatch(clearCart());
+    }, []);
     return (
         <div className="min-h-screen px-5">
             <div className="flex flex-col items-center justify-center h-[90vh]">
@@ -15,12 +21,10 @@ const PaymentSuccess = () => {
                         Order Success !
                     </h1>
                     <p className="py-3 text-center">
-                        Thank you for choosing our restaurant! We appreciate
-                        your order
+                        Thank you for choosing our Platform! We appreciate your
+                        order
                     </p>
-                    <p className="py-2 text-center text-lg">
-                        Have a Great Day
-                    </p>
+                    <p className="py-2 text-center text-lg">Have a Great Day</p>
                     <Button
                         variant="contained"
                         className="py-5"

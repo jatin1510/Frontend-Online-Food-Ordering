@@ -38,6 +38,7 @@ export const loginUser = (req) => async (dispatch) => {
     try {
         const { data } = await api.post(`/auth/signin`, req.userData);
         if (data.jwt) localStorage.setItem("jwt", data.jwt);
+        if (data.role) localStorage.setItem("role", data.role);
         if (data.role === "ROLE_RESTAURANT_OWNER") {
             req.navigate("/admin/restaurant");
         } else {
