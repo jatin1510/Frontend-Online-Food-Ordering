@@ -5,7 +5,6 @@ import {
     Button,
     Card,
     CardHeader,
-    Chip,
     Menu,
     MenuItem,
     Paper,
@@ -24,8 +23,13 @@ import {
 } from "../../State/Restaurant Order/Action";
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
-import { hover } from "@testing-library/user-event/dist/hover";
 
+const colors = {
+    PENDING: "red",
+    OUT_FOR_DELIVERY: "#ff9800",
+    DELIVERED: "green",
+    COMPLETED: "#03a9f4",
+};
 const orderStatus = [
     { label: "Out for Delivery", value: "OUT_FOR_DELIVERY" },
     { label: "Delivered", value: "DELIVERED" },
@@ -103,7 +107,7 @@ const OrderTable = ({ filterValue = "all" }) => {
                                             {item.id}
                                         </TableCell>
                                         <TableCell align="center">
-                                            <AvatarGroup>
+                                            <AvatarGroup max={3}>
                                                 {item.items.map((orderItem) => {
                                                     return (
                                                         <Avatar
@@ -141,7 +145,13 @@ const OrderTable = ({ filterValue = "all" }) => {
                                                                 ) => {
                                                                     return (
                                                                         <TreeItem
-                                                                        sx={{ "&:hover": { background: "none" } }}
+                                                                            sx={{
+                                                                                "&:hover":
+                                                                                    {
+                                                                                        background:
+                                                                                            "none",
+                                                                                    },
+                                                                            }}
                                                                             itemId={
                                                                                 ingredient
                                                                             }
@@ -158,7 +168,11 @@ const OrderTable = ({ filterValue = "all" }) => {
                                                 })}
                                             </SimpleTreeView>
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell
+                                            sx={{
+                                                color: colors[item.orderStatus],
+                                            }}
+                                        >
                                             {item.orderStatus}
                                         </TableCell>
                                         <TableCell>
@@ -174,7 +188,7 @@ const OrderTable = ({ filterValue = "all" }) => {
                                                     open ? "true" : undefined
                                                 }
                                                 onClick={handleClick}
-                                                color="info"
+                                                color="primary"
                                             >
                                                 Update
                                             </Button>

@@ -8,9 +8,9 @@ import Profile from "../Profile/Profile";
 import Auth from "../Auth/Auth";
 import PaymentSuccess from "../Payment/PaymentSuccess";
 import PaymentFailure from "../Payment/PaymentFailure";
+import ResetPassword from "../Auth/ResetPassword";
 
 const CustomerRoute = () => {
-    
     return (
         <div>
             <Navbar />
@@ -22,6 +22,16 @@ const CustomerRoute = () => {
                     element={<Home />}
                 ></Route>
                 <Route exact path="/account/login" element={<Home />}></Route>
+                <Route
+                    exact
+                    path="/account/login/forgotPassword"
+                    element={<Home />}
+                ></Route>
+                <Route
+                    exact
+                    path="/reset-password"
+                    element={<ResetPassword />}
+                />
                 <Route
                     exact
                     path="/restaurant/:city/:title/:id"

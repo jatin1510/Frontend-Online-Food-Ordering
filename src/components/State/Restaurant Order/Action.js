@@ -1,5 +1,8 @@
 import { api } from "../../Config/api";
 import {
+    FILTER_ORDERS_FAILURE,
+    FILTER_ORDERS_REQUEST,
+    FILTER_ORDERS_SUCCESS,
     GET_RESTAURANT_ORDERS_FAILURE,
     GET_RESTAURANT_ORDERS_REQUEST,
     GET_RESTAURANT_ORDERS_SUCCESS,
@@ -46,6 +49,19 @@ export const updateOrderStatus = ({ jwt, orderId, orderStatus }) => {
         } catch (error) {
             console.log("Update order status error: ", error);
             dispatch({ type: GET_RESTAURANT_ORDERS_FAILURE, payload: error });
+        }
+    };
+};
+
+export const filterOrders = (value) => {
+    return async (dispatch) => {
+        dispatch({ type: FILTER_ORDERS_REQUEST });
+        try {
+            console.log("Filtering orders: ", value);
+            dispatch({ type: FILTER_ORDERS_SUCCESS, payload: value });
+        } catch (error) {
+            console.log("Filter orders error: ", error);
+            dispatch({ type: FILTER_ORDERS_FAILURE, payload: error });
         }
     };
 };

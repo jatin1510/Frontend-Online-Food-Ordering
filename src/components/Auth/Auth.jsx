@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { style } from "../Cart/Cart";
 import RegisterForm from "./RegisterForm";
 import LoginForm from "./LoginForm";
+import ForgotPasswordForm from "./ForgotPasswordForm";
 
 const Auth = () => {
     const location = useLocation();
@@ -16,7 +17,8 @@ const Auth = () => {
                 onClose={handleClose}
                 open={
                     location.pathname === "/account/register" ||
-                    location.pathname === "/account/login"
+                    location.pathname === "/account/login" ||
+                    location.pathname === "/account/login/forgotPassword"
                 }
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
@@ -24,8 +26,10 @@ const Auth = () => {
                 <Box sx={style}>
                     {location.pathname === "/account/register" ? (
                         <RegisterForm />
-                    ) : (
+                    ) : location.pathname === "/account/login" ? (
                         <LoginForm />
+                    ) : (
+                        <ForgotPasswordForm />
                     )}
                 </Box>
             </Modal>

@@ -5,12 +5,14 @@ const initialState = {
     loading: false,
     error: null,
     orders: [],
+    filteredOrders: [],
 };
 
 export const restaurantOrderReducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.GET_RESTAURANT_ORDERS_REQUEST:
         case actionTypes.UPDATE_ORDER_STATUS_REQUEST:
+        case actionTypes.FILTER_ORDERS_REQUEST:
             return {
                 ...state,
                 loading: true,
@@ -36,8 +38,26 @@ export const restaurantOrderReducer = (state = initialState, action) => {
                 }),
             };
 
+        case actionTypes.FILTER_ORDERS_SUCCESS:
+            console.log("inside reducer");
+            if (action.payload === "ALL")
+                return {
+                    ...state,
+                    loading: false,
+                    filteredOrders: state.orders,
+                };
+            else
+                return {
+                    ...state,
+                    loading: false,
+                    filteredOrders: state.orders.map(
+                        (order) => order.orderStatus === action.payload
+                    ),
+                };
+
         case actionTypes.GET_RESTAURANT_ORDERS_FAILURE:
         case actionTypes.UPDATE_ORDER_STATUS_FAILURE:
+        case actionTypes.FILTER_ORDERS_FAILURE:
             return {
                 ...state,
                 loading: false,

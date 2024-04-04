@@ -22,21 +22,33 @@ const Navbar = () => {
     return (
         <div className="px-5 sticky top-0 z-50 py-[.8rem] bg-[#e91e63] lg:px-20 flex justify-between">
             <div className="lg:mr-10 cursor-pointer flex items-center space-x-4">
-                <li onClick={()=>{navigate("/")}} className="logo font-semibold text-white text-2xl">
+                <li
+                    onClick={() => {
+                        navigate("/");
+                    }}
+                    className="logo font-semibold text-white text-2xl"
+                >
                     Hungrio
                 </li>
             </div>
             <div className="flex items-center space-x-2 lg:space-x-10">
                 <div className="">
                     <IconButton>
-                        <SearchIcon className="text-white" sx={{ fontSize: "1.5rem" }} />
+                        <SearchIcon
+                            className="text-white"
+                            sx={{ fontSize: "1.5rem" }}
+                        />
                     </IconButton>
                 </div>
                 <div className="">
                     {auth.user ? (
                         <Avatar
                             onClick={handleAvatarClick}
-                            sx={{ bgcolor: "white", color: pink.A400, cursor: "pointer" }}
+                            sx={{
+                                bgcolor: "white",
+                                color: pink.A400,
+                                cursor: "pointer",
+                            }}
                         >
                             {auth.user?.fullName[0].toUpperCase()}
                         </Avatar>
@@ -51,9 +63,26 @@ const Navbar = () => {
                     )}
                 </div>
                 <div className="">
-                    <IconButton onClick={()=>{auth.user ? navigate("/cart") : navigate("/account/login")}}>
-                        <Badge color="primary" badgeContent={cart?.cartItems.length}>
-                            <ShoppingCartIcon className="text-white" sx={{ fontSize: "1.5rem" }} />
+                    <IconButton
+                        onClick={() => {
+                            auth.user
+                                ? navigate("/cart")
+                                : navigate("/account/login");
+                        }}
+                    >
+                        <Badge
+                            sx={{
+                                "& .MuiBadge-badge": {
+                                    color: "white",
+                                    backgroundColor: "black",
+                                },
+                            }}
+                            badgeContent={cart?.cartItems.length}
+                        >
+                            <ShoppingCartIcon
+                                className="text-white"
+                                sx={{ fontSize: "1.5rem" }}
+                            />
                         </Badge>
                     </IconButton>
                 </div>

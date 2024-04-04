@@ -1,16 +1,17 @@
+import { Grid, IconButton, Typography } from "@mui/material";
+import { Field, Formik, Form } from "formik";
 import React from "react";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import * as Yup from "yup";
-import { Typography, Button, Grid, TextField, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../State/Authentication/Action";
+import * as Yup from "yup";
+import { Button, TextField } from "@mui/material";
+import { ErrorMessage } from "formik";
 import CloseIcon from "@mui/icons-material/Close";
+import { useDispatch, useSelector } from "react-redux";
+import { forgotPassword } from "../State/Authentication/Action";
 import { fireToast } from "../Notification/Notification";
 
 const initialValues = {
     email: "",
-    password: "",
 };
 
 const validationSchema = new Yup.ObjectSchema({
@@ -21,34 +22,34 @@ const validationSchema = new Yup.ObjectSchema({
             "email must be a valid email"
         )
         .required(),
-    password: Yup.string().required(),
 });
 
-const LoginForm = () => {
-    const navigate = useNavigate();
+const ForgotPasswordForm = () => {
     const dispatch = useDispatch();
     const { auth } = useSelector((store) => store);
-    const handleSubmit = (values) => {
-        dispatch(loginUser({ userData: values, navigate }));
-        console.log(auth);
+    const navigate = useNavigate();
+
+    const handleSubmit = (req) => {
+        dispatch(forgotPassword(req));
         setTimeout(() => {
-            if (!auth.loginError) {
-                fireToast("Login Successful", "success");
+            console.log(auth);
+            if (auth.forgotPassword.success !== null) {
+                fireToast(auth.forgotPassword.success.message, "success");
             } else {
                 fireToast(
-                    auth.loginError?.response.data.message ||
-                        auth.loginError.message,
+                    auth.forgotPassword?.error?.response?.data?.message ||
+                        auth.forgotPassword?.error?.message,
                     "error"
                 );
             }
+            navigate("/");
         }, 1000);
     };
-
     return (
         <div>
             <div className="flex flex-row justify-between">
                 <Typography variant="h5" className="text-center">
-                    Login
+                    Forgot Password
                 </Typography>
                 <IconButton
                     onClick={() => {
@@ -58,13 +59,10 @@ const LoginForm = () => {
                     <CloseIcon color="primary" />
                 </IconButton>
             </div>
-            {/* {auth.loginError && (
-                <div>
-                    <Typography className="p-2 text-center text-red-600">
-                        {auth.loginError.response?.data.message}
-                    </Typography>
-                </div>
-            )} */}
+            <Typography variant="body2" align="left" sx={{ mt: 3 }}>
+                Enter your email address below and we'll send you a link to
+                reset your password.
+            </Typography>
             <div className="mt-5">
                 <Formik
                     initialValues={initialValues}
@@ -96,28 +94,6 @@ const LoginForm = () => {
                                     ></Field>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <Field
-                                        type="password"
-                                        as={TextField}
-                                        name="password"
-                                        label="Password"
-                                        fullWidth
-                                        variant="outlined"
-                                        error={Boolean(
-                                            errors.password && touched.password
-                                        )}
-                                        helperText={
-                                            <ErrorMessage name="password">
-                                                {(msg) => (
-                                                    <span className="text-red-600">
-                                                        {msg}
-                                                    </span>
-                                                )}
-                                            </ErrorMessage>
-                                        }
-                                    ></Field>
-                                </Grid>
-                                <Grid item xs={12}>
                                     <Button
                                         sx={{ mt: 1, padding: "15px" }}
                                         variant="outlined"
@@ -125,7 +101,7 @@ const LoginForm = () => {
                                         color="primary"
                                         fullWidth
                                     >
-                                        Login
+                                        Request Reset Link
                                     </Button>
                                 </Grid>
                             </Grid>
@@ -133,33 +109,20 @@ const LoginForm = () => {
                     )}
                 </Formik>
             </div>
-            <Typography variant="body2" sx={{ mt: 1 }}>
+            <Typography variant="body2" align="center" sx={{ mt: 3 }}>
                 <Button
                     variant="text"
                     size="small"
                     onClick={() => {
-                        navigate("/account/login/forgotPassword");
+                        navigate("/account/login");
                     }}
                     sx={{ "&:hover": { background: "none" } }}
                 >
-                    Forgot Password?
-                </Button>
-            </Typography>
-            <Typography variant="body2" align="center" sx={{ mt: 2 }}>
-                Don't have an account?&nbsp;
-                <Button
-                    variant="text"
-                    size="small"
-                    onClick={() => {
-                        navigate("/account/register");
-                    }}
-                    sx={{ "&:hover": { background: "none" } }}
-                >
-                    Register
+                    Back to Login
                 </Button>
             </Typography>
         </div>
     );
 };
 
-export default LoginForm;
+export default ForgotPasswordForm;

@@ -14,7 +14,7 @@ const orderStatus = [
     { label: "All", value: "all" },
     { label: "Pending", value: "pending" },
     { label: "Completed", value: "completed" },
-    { label: "Out for Delivery", value: "outForDelivery" },
+    { label: "Out for Delivery", value: "out_For_Delivery" },
     { label: "Delivered", value: "delivered" },
 ];
 // TODO: If i have all the orders, why should i request backend for each filter?

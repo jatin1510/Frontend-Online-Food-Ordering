@@ -13,7 +13,7 @@ import { fireToast } from "../Notification/Notification";
 const MenuCard = ({ item }) => {
     const navigate = useNavigate();
     const jwt = localStorage.getItem("jwt");
-    const { cart } = useSelector((store) => store);
+    const { cart, restaurant } = useSelector((store) => store);
     const dispatch = useDispatch();
     const [selectedIngredients, setSelectedIngredients] = useState([]);
     const handleCheckboxChange = (value) => {
@@ -53,8 +53,22 @@ const MenuCard = ({ item }) => {
                     id: cartItem.id,
                 });
                 navigate("/cart");
+                fireToast("🦄 Item Already in Cart");
                 return;
             }
+        }
+        // check whether the restaurant is same or not
+        if (
+            cart.cartItems.length > 0 &&
+            cart.cartItems[0].food.restaurant.id !== restaurant.restaurant.id
+        ) {
+            fireToast("🦄 Your cart contains items from other restaurant.");
+            setTimeout(() => {
+                fireToast(
+                    "🦄 Please clear the cart to add items from this restaurant."
+                );
+            }, 4000);
+            return;
         }
         const req = {
             token: localStorage.getItem("jwt"),
@@ -68,6 +82,14 @@ const MenuCard = ({ item }) => {
         fireToast("Item added to cart");
     };
 
+    const isDisabled = (ingredients, option) => {
+        for (let i = 0; i < ingredients.length; i++) {
+            if (ingredients[i].name === option) {
+                return ingredients[i].inStock;
+            }
+        }
+        return false;
+    };
     return (
         <Accordion>
             <AccordionSummary
@@ -111,7 +133,16 @@ const MenuCard = ({ item }) => {
                                                     key={index2}
                                                     control={
                                                         <Checkbox
+                                                            disabled={
+                                                                !isDisabled(
+                                                                    item.ingredients,
+                                                                    option
+                                                                )
+                                                            }
                                                             onChange={() => {
+                                                                console.log(
+                                                                    option
+                                                                );
                                                                 handleCheckboxChange(
                                                                     option
                                                                 );
@@ -129,12 +160,16 @@ const MenuCard = ({ item }) => {
                     </div>
                     <div className="pt-5">
                         <Button
-                            disabled={false}
+                            sx={{
+                                cursor: !item.available
+                                    ? "not-allowed"
+                                    : "pointer",
+                            }}
                             variant="contained"
                             type="submit"
                             onClick={handleAddItemToCart}
                         >
-                            {true ? "Add to cart" : "Out of Stock"}
+                            {item.available ? "Add to cart" : "Out of Stock"}
                         </Button>
                     </div>
                 </form>

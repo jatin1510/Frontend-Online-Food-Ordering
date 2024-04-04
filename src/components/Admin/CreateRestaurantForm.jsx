@@ -378,7 +378,7 @@ const CreateRestaurantForm = () => {
                                 fullWidth
                                 id="email"
                                 name="email"
-                                label="Email"
+                                label="Restaurant Email"
                                 variant="outlined"
                                 onChange={formik.handleChange}
                                 value={formik.values.email}

@@ -1,5 +1,12 @@
-import { Card, Chip, Divider, Paper } from "@mui/material";
+import {
+    Card,
+    Chip,
+    Divider,
+    Paper,
+    Tooltip,
+} from "@mui/material";
 import React from "react";
+import InfoIcon from "@mui/icons-material/Info";
 
 const colorObject = {
     PENDING: "error",
@@ -51,12 +58,23 @@ const OrderCard = ({ item, order }) => {
                     <span className="font-sans font-semibold">
                         Ordered On:&nbsp;
                     </span>
-                    <span>{new Date(order.createdAt).toDateString()}</span>
-                </div>
-                <div>
-                    <span className="font-sans font-semibold">
-                        Total amount:&nbsp;
+                    <span>
+                        {new Date(order.createdAt).toLocaleDateString()} at{" "}
+                        {new Date(order.createdAt).getHours()}:{new Date(order.createdAt).getMinutes()}
                     </span>
+                </div>
+                <div className="flex flex-row items-center">
+                    <Tooltip
+                        title={"Delivery charge and platform fee excluded"}
+                        arrow
+                        placement="left-start"
+                    >
+                        <span className="font-sans font-semibold">
+                            Total amount{" "}
+                            <InfoIcon className="pb-1" fontSize="small" />
+                            :&nbsp;
+                        </span>
+                    </Tooltip>
                     <span>{order.totalPrice}</span>
                 </div>
                 <div>
@@ -77,7 +95,7 @@ const OrderCard = ({ item, order }) => {
                 </div>
                 <div className="flex flex-col gap-2">
                     {order.items.map((item, index) => (
-                        <Paper elevation={2} className="p-3">
+                        <Paper key={index} elevation={2} className="p-3">
                             <div className="flex flex-row justify-between">
                                 <div className="pl-2">
                                     <div>

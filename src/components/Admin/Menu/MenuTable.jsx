@@ -104,7 +104,7 @@ const MenuTable = () => {
                                     </TableCell>
                                     <TableCell>{item.name}</TableCell>
                                     <TableCell>
-                                        <div className="space-x-2">
+                                        <div className="space-x-2 flex flex-wrap">
                                             {item.ingredients.map(
                                                 (ingredient) => (
                                                     <Chip

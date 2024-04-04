@@ -4,6 +4,7 @@ import { Button } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../State/Authentication/Action";
 import { useNavigate } from "react-router-dom";
+import { fireToast } from "../Notification/Notification";
 
 const UserProfile = () => {
     const dispatch = useDispatch();
@@ -12,6 +13,7 @@ const UserProfile = () => {
     const handleLogout = () => {
         dispatch(logout());
         navigate("/");
+        fireToast("You have been logged out.", "error");
     };
 
     return (

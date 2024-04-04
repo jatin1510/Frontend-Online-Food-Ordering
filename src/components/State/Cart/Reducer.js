@@ -1,5 +1,6 @@
 import * as actionTypes from "./ActionTypes";
 import { LOGOUT } from "../Authentication/ActionTypes";
+import { calculateCartTotal } from "../../Utils/CalculateCartTotal";
 
 const initialState = {
     cart: null,
@@ -49,6 +50,16 @@ export const cartReducer = (state = initialState, action) => {
                 cartItems: state.cartItems.map((item) =>
                     item.id === action.payload.id ? action.payload : item
                 ),
+                cart: {
+                    ...state.cart,
+                    total: calculateCartTotal(
+                        state.cartItems.map((item) =>
+                            item.id === action.payload.id
+                                ? action.payload
+                                : item
+                        )
+                    ),
+                },
             };
 
         case actionTypes.REMOVE_CART_ITEM_SUCCESS:

@@ -3,6 +3,9 @@ import {
     ADD_TO_FAVORITE_FAILURE,
     ADD_TO_FAVORITE_REQUEST,
     ADD_TO_FAVORITE_SUCCESS,
+    FORGOT_PASSWORD_FAILURE,
+    FORGOT_PASSWORD_REQUEST,
+    FORGOT_PASSWORD_SUCCESS,
     GET_USER_FAILURE,
     GET_USER_REQUEST,
     GET_USER_SUCCESS,
@@ -13,6 +16,9 @@ import {
     REGISTER_FAILURE,
     REGISTER_REQUEST,
     REGISTER_SUCCESS,
+    RESET_PASSWORD_FAILURE,
+    RESET_PASSWORD_REQUEST,
+    RESET_PASSWORD_SUCCESS,
 } from "./ActionTypes";
 
 const initialState = {
@@ -24,6 +30,8 @@ const initialState = {
     success: null,
     registrationError: null,
     loginError: null,
+    resetPassword: { success: null, error: null },
+    forgotPassword: { success: null, error: null },
 };
 
 export const authReducer = (state = initialState, action) => {
@@ -32,6 +40,8 @@ export const authReducer = (state = initialState, action) => {
         case LOGIN_REQUEST:
         case GET_USER_REQUEST:
         case ADD_TO_FAVORITE_REQUEST:
+        case RESET_PASSWORD_REQUEST:
+        case FORGOT_PASSWORD_REQUEST:
             return { ...state, isLoading: true, error: null, success: null };
 
         case REGISTER_SUCCESS:
@@ -41,7 +51,10 @@ export const authReducer = (state = initialState, action) => {
                 isLoading: false,
                 jwt: action.payload,
                 success: "Success",
+                registrationError: null,
+                loginError: null,
             };
+            
         case GET_USER_SUCCESS:
             return {
                 ...state,
@@ -60,6 +73,34 @@ export const authReducer = (state = initialState, action) => {
                           (item) => item.id !== action.payload.id
                       )
                     : [...state.favorites, action.payload],
+            };
+
+        case RESET_PASSWORD_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                resetPassword: { success: action.payload, error: null },
+            };
+
+        case FORGOT_PASSWORD_SUCCESS:
+            return {
+                ...state,
+                isLoading: false,
+                forgotPassword: { success: action.payload, error: null },
+            };
+
+        case FORGOT_PASSWORD_FAILURE:
+            return {
+                ...state,
+                isLoading: false,
+                forgotPassword: { success: null, error: action.payload },
+            };
+
+        case RESET_PASSWORD_FAILURE:
+            return {
+                ...state,
+                isLoading: false,
+                resetPassword: { success: null, error: action.payload },
             };
 
         case REGISTER_FAILURE:

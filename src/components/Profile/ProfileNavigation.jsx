@@ -11,6 +11,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../State/Authentication/Action";
 import { darkTheme } from "../../Theme/DarkTheme";
+import { fireToast } from "../Notification/Notification";
 
 const menu = [
     { title: "Orders", icon: <ShoppingBagIcon />, path: "/orders" },
@@ -40,6 +41,7 @@ const ProfileNavigation = ({ open, handleClose, setOpenSideBar }) => {
         if (path === "logout") {
             dispatch(logout());
             navigate("/");
+            fireToast("You have been logged out.", "error");
         } else {
             navigate(`/profile/${path}`);
         }

@@ -59,8 +59,13 @@ const Cart = () => {
         dispatch(getAllAddress(localStorage.getItem("jwt")));
     }, []);
     const chooseAddress = (item) => {
-        setSelectedAddress(item);
-        setHasChosen(true);
+        if (hasChosen) {
+            setSelectedAddress(null);
+            setHasChosen(false);
+        } else {
+            setSelectedAddress(item);
+            setHasChosen(true);
+        }
     };
 
     // Modal handlers
@@ -98,7 +103,7 @@ const Cart = () => {
     return (
         <div>
             <main className="lg:flex justify-between ">
-                <section className="lg:w-[30%] space-y-6 lg:min-h-screen pt-10">
+                <section className="lg:w-[30%] space-y-6 lg:min-h-screen pt-10 max-h-screen overflow-y-scroll">
                     {cart.cartItems.length > 0 ? (
                         cart.cartItems.map((item, index) => {
                             return <CartItem key={index} item={item} />;
