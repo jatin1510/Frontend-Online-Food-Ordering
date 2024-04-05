@@ -2,8 +2,6 @@ import React, { useContext } from "react";
 import { Route, Routes } from "react-router-dom";
 import AdminRoute from "./AdminRoute";
 import CustomerRoute from "./CustomerRoute";
-
-import Error from "../Error/Error";
 import Notification from "../Notification/Notification";
 import { useTheme } from "@emotion/react";
 import { Box, IconButton } from "@mui/material";
@@ -33,7 +31,7 @@ const Routers = () => {
                 sx={{
                     zIndex: 1000,
                     position: "fixed",
-                    bottom: 30,
+                    bottom: 50,
                     right: 30,
                     display: "flex",
                     alignItems: "center",
@@ -82,7 +80,6 @@ const Routers = () => {
                     </Typography>
                 </Popover>
             </Box>
-            {/* <Error /> */}
             <Notification />
             <Routes>
                 <Route

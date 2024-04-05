@@ -63,11 +63,7 @@ export const getRestaurantById = (req) => {
     return async (dispatch) => {
         dispatch({ type: GET_RESTAURANT_BY_ID_REQUEST });
         try {
-            const { data } = await api.get(`/api/restaurants/${req.id}`, {
-                headers: {
-                    Authorization: `Bearer ${req.jwt}`,
-                },
-            });
+            const { data } = await api.get(`/api/restaurants/${req.id}`);
             console.log("Restaurant By ID: ", req.id, " is ", data);
             dispatch({
                 type: GET_RESTAURANT_BY_ID_SUCCESS,
@@ -342,17 +338,12 @@ export const createCategory = ({ reqData, jwt }) => {
     };
 };
 
-export const getRestaurantCategories = ({ jwt, restaurantId }) => {
+export const getRestaurantCategories = ({ restaurantId }) => {
     return async (dispatch) => {
         dispatch({ type: GET_RESTAURANT_CATEGORIES_REQUEST });
         try {
             const { data } = await api.get(
-                `/api/category/restaurant/${restaurantId}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${jwt}`,
-                    },
-                }
+                `/api/category/restaurant/${restaurantId}`
             );
             console.log("Restaurant Categories: ", data);
             dispatch({

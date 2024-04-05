@@ -1,20 +1,31 @@
-import {
-    Card,
-    CardContent,
-    CardMedia,
-    Typography,
-} from "@mui/material";
+import { Card, CardContent, CardMedia, Typography } from "@mui/material";
 import React from "react";
 import { DateTimeField, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
+import Chip from '@mui/material/Chip';
 
 const EventCard = ({ item }) => {
+    const checkTimeIntersection = () => {
+        const start = new Date(item.startDateAndTime).getTime();
+        const end = new Date(item.endDateAndTime).getTime();
+        const currentTime = new Date().getTime();
+        return start < currentTime && currentTime < end;
+    };
     return (
-        <Card sx={{ width: 345 }}>
+        <Card
+            sx={{
+                width: 345,
+            }}
+        >
             <CardMedia sx={{ height: 345 }} image={item?.images[0]} />
             <CardContent>
-                <Typography variant="h5">{item.restaurant.name}</Typography>
+                <div className="flex flex-row items-center justify-between">
+                    <Typography variant="h5">{item.restaurant.name}</Typography>
+                    {checkTimeIntersection() && <Chip color="success" label={"Live"}>
+                        Live
+                    </Chip>}
+                </div>
                 <Typography variant="body2">{item.description}</Typography>
                 <div className="py-2 space-y-2">
                     <p>{item.location}</p>

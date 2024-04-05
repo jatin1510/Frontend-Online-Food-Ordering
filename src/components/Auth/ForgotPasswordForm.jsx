@@ -29,21 +29,21 @@ const ForgotPasswordForm = () => {
     const { auth } = useSelector((store) => store);
     const navigate = useNavigate();
 
-    const handleSubmit = (req) => {
-        dispatch(forgotPassword(req));
-        setTimeout(() => {
-            console.log(auth);
-            if (auth.forgotPassword.success !== null) {
-                fireToast(auth.forgotPassword.success.message, "success");
-            } else {
-                fireToast(
-                    auth.forgotPassword?.error?.response?.data?.message ||
-                        auth.forgotPassword?.error?.message,
-                    "error"
-                );
-            }
-            navigate("/");
-        }, 1000);
+    const handleSubmit =  async (req) => {
+        dispatch(await forgotPassword(req));
+        // setTimeout(() => {
+        // console.log(auth);
+        // if (auth.forgotPassword.success !== null) {
+        //     fireToast(auth.forgotPassword.success.message, "success");
+        // } else {
+        //     fireToast(
+        //         auth.forgotPassword?.error?.response?.data?.message ||
+        //             auth.forgotPassword?.error?.message,
+        //         "error"
+        //     );
+        // }
+        navigate("/");
+        // }, 1000);
     };
     return (
         <div>

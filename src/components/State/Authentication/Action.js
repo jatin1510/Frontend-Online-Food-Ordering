@@ -1,4 +1,5 @@
 import { api } from "../../Config/api";
+import { fireToast } from "../../Notification/Notification";
 import {
     ADD_TO_FAVORITE_FAILURE,
     ADD_TO_FAVORITE_REQUEST,
@@ -96,15 +97,20 @@ export const addToFavorite =
         }
     };
 
-export const forgotPassword = (req) => {
+export const forgotPassword = async (req) => {
     return async (dispatch) => {
         dispatch({ type: FORGOT_PASSWORD_REQUEST });
         try {
             const { data } = await api.post(`/auth/forgot-password`, req);
             dispatch({ type: FORGOT_PASSWORD_SUCCESS, payload: data });
             console.log("Forgot Password Success: ", data);
+            fireToast(data.message, "success");
         } catch (error) {
             dispatch({ type: FORGOT_PASSWORD_FAILURE, payload: error });
+            fireToast(
+                error?.response?.data?.message || error?.message,
+                "error"
+            );
             console.log(error);
         }
     };
@@ -117,8 +123,13 @@ export const resetPassword = (req) => {
             const { data } = await api.post(`/auth/reset-password`, req);
             dispatch({ type: RESET_PASSWORD_SUCCESS, payload: data });
             console.log("Reset Password Success: ", data);
+            fireToast(data.message, "success");
         } catch (error) {
             dispatch({ type: RESET_PASSWORD_FAILURE, payload: error });
+            fireToast(
+                error?.response?.data?.message || error?.message,
+                "error"
+            );
             console.log(error);
         }
     };
@@ -126,7 +137,7 @@ export const resetPassword = (req) => {
 
 export const logout = () => async (dispatch) => {
     try {
-        localStorage.removeItem("jwt");
+        localStorage.clear();
         dispatch({ type: LOGOUT });
         console.log("Logged Out");
     } catch (error) {

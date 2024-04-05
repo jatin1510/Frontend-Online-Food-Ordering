@@ -6,6 +6,9 @@ import {
     GET_RESTAURANT_ORDERS_FAILURE,
     GET_RESTAURANT_ORDERS_REQUEST,
     GET_RESTAURANT_ORDERS_SUCCESS,
+    UPDATE_ORDER_STATUS_FAILURE,
+    UPDATE_ORDER_STATUS_REQUEST,
+    UPDATE_ORDER_STATUS_SUCCESS,
 } from "./ActionTypes";
 
 export const getRestaurantOrders = ({ jwt, restaurantId, orderStatus }) => {
@@ -33,7 +36,7 @@ export const getRestaurantOrders = ({ jwt, restaurantId, orderStatus }) => {
 
 export const updateOrderStatus = ({ jwt, orderId, orderStatus }) => {
     return async (dispatch) => {
-        dispatch({ type: GET_RESTAURANT_ORDERS_REQUEST });
+        dispatch({ type: UPDATE_ORDER_STATUS_REQUEST });
         try {
             const { data } = await api.put(
                 `/api/admin/orders/update/${orderId}/${orderStatus}`,
@@ -45,10 +48,10 @@ export const updateOrderStatus = ({ jwt, orderId, orderStatus }) => {
                 }
             );
             console.log("Update order status data: ", data);
-            dispatch({ type: GET_RESTAURANT_ORDERS_SUCCESS, payload: data });
+            dispatch({ type: UPDATE_ORDER_STATUS_SUCCESS, payload: data });
         } catch (error) {
             console.log("Update order status error: ", error);
-            dispatch({ type: GET_RESTAURANT_ORDERS_FAILURE, payload: error });
+            dispatch({ type: UPDATE_ORDER_STATUS_FAILURE, payload: error });
         }
     };
 };

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addToFavorite } from "../State/Authentication/Action";
 import { isPresentInFavorites } from "../Config/logic";
 import { useNavigate } from "react-router-dom";
+import { fireToast } from "../Notification/Notification";
 
 const RestaurantCard = ({ item }) => {
     const dispatch = useDispatch();
@@ -60,7 +61,9 @@ const RestaurantCard = ({ item }) => {
                     <IconButton
                         onClick={() => {
                             if (auth?.user) handleAddToFavorite(item.id);
-                            else navigate("/account/login");
+                            else {
+                                fireToast('Please Login to Continue', "error")
+                            }
                         }}
                     >
                         {isPresentInFavorites(auth.favorites, item) ? (

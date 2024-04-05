@@ -41,7 +41,6 @@ const OrderTable = ({ filterValue = "all" }) => {
     const dispatch = useDispatch();
     const { restaurant, restaurantOrder } = useSelector((store) => store);
 
-    console.log("restaurant Orders:", restaurantOrder.orders);
     useEffect(() => {
         let filter = filterValue === "all" ? "" : filterValue;
         dispatch(
@@ -53,27 +52,32 @@ const OrderTable = ({ filterValue = "all" }) => {
         );
     }, []);
 
+    // updates
+    const [id, setId] = useState(null);
+
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-    const handleClick = (event) => {
+    const handleClick = (event, id) => {
         setAnchorEl(event.currentTarget);
+        setId(id);
     };
     const handleClose = () => {
         setAnchorEl(null);
     };
-    const handleUpdateOrderStatus = (id, value) => {
+    const handleUpdateOrderStatus = (value) => {
         console.log("Order id: ", id);
         console.log(value);
-        // dispatch(
-        //     updateOrderStatus({
-        //         jwt: localStorage.getItem("jwt"),
-        //         orderId: restaurantOrder.orders[0].id,
-        //         orderStatus: value,
-        //     })
-        // );
+        dispatch(
+            updateOrderStatus({
+                jwt: localStorage.getItem("jwt"),
+                orderId: id,
+                orderStatus: value,
+            })
+        );
         handleClose();
     };
 
+    console.log("filterValue: ", filterValue);
     return (
         <Box>
             <Card>
@@ -88,7 +92,7 @@ const OrderTable = ({ filterValue = "all" }) => {
                                 <TableCell align="right">Price</TableCell>
                                 <TableCell>Items</TableCell>
                                 <TableCell>Status</TableCell>
-                                <TableCell>Update</TableCell>
+                                {filterValue === "all" && <TableCell>Update</TableCell>}
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -175,7 +179,7 @@ const OrderTable = ({ filterValue = "all" }) => {
                                         >
                                             {item.orderStatus}
                                         </TableCell>
-                                        <TableCell>
+                                        {filterValue === "all" && <TableCell>
                                             <Button
                                                 id="basic-button"
                                                 aria-controls={
@@ -187,7 +191,9 @@ const OrderTable = ({ filterValue = "all" }) => {
                                                 aria-expanded={
                                                     open ? "true" : undefined
                                                 }
-                                                onClick={handleClick}
+                                                onClick={(e) =>
+                                                    handleClick(e, item.id)
+                                                }
                                                 color="primary"
                                             >
                                                 Update
@@ -205,9 +211,8 @@ const OrderTable = ({ filterValue = "all" }) => {
                                                 {orderStatus.map((status) => {
                                                     return (
                                                         <MenuItem
-                                                            onClick={(e) =>
+                                                            onClick={() =>
                                                                 handleUpdateOrderStatus(
-                                                                    item.id,
                                                                     status.value
                                                                 )
                                                             }
@@ -217,7 +222,7 @@ const OrderTable = ({ filterValue = "all" }) => {
                                                     );
                                                 })}
                                             </Menu>
-                                        </TableCell>
+                                        </TableCell>}
                                     </TableRow>
                                 );
                             })}

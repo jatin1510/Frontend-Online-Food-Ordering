@@ -66,7 +66,7 @@ const Orders = () => {
                 </FormControl>
             </Card>
             <div className="py-2">
-                <OrderTable />
+                <OrderTable filterValue={filterValue} />
             </div>
         </div>
     );

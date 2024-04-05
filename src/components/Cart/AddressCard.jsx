@@ -4,6 +4,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch } from "react-redux";
 import { deleteAddress } from "../State/Cart/Action";
+import { fireToast } from "../Notification/Notification";
 
 const AddressCard = ({ chosen, item, showButton, chooseAddress }) => {
     const dispatch = useDispatch();
@@ -11,6 +12,7 @@ const AddressCard = ({ chosen, item, showButton, chooseAddress }) => {
         dispatch(
             deleteAddress({ id: item.id, jwt: localStorage.getItem("jwt") })
         );
+        fireToast("Address deleted successfully");
     };
     return (
         <Card>

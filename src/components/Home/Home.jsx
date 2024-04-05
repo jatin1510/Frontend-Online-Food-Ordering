@@ -38,7 +38,7 @@ const Home = () => {
                 <h1 className="text-2xl font-semibold text-center pb-10">
                     Order From Our Handpicked Favorites
                 </h1>
-                <div className="flex flex-wrap items-center justify-center gap-5">
+                <div className="flex flex-wrap items-start justify-center gap-5">
                     {restaurant.restaurants.map((item) => {
                         return <RestaurantCard item={item} />;
                     })}

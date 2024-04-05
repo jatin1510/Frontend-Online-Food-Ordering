@@ -39,6 +39,11 @@ const MenuCard = ({ item }) => {
 
     const handleAddItemToCart = (e) => {
         e.preventDefault();
+        if(localStorage.getItem("jwt") === null){
+            fireToast("🦄 Please login to add items to cart");
+            return;
+        }
+
         var array1 = selectedIngredients;
         for (const cartItem of cart.cartItems) {
             var array2 = cartItem.ingredients;

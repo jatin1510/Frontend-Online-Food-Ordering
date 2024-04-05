@@ -32,11 +32,14 @@ function App() {
         }
     }, [auth.user]);
 
-    const [mode, setMode] = useState("light");
+    const [mode, setMode] = useState(localStorage.getItem("mode") || "light");
     const colorMode = useMemo(
         () => ({
             toggleColorMode: () => {
-                console.log("called toggleColorMode");
+                localStorage.setItem(
+                    "mode",
+                    mode === "light" ? "dark" : "light"
+                );
                 setMode((prevMode) =>
                     prevMode === "light" ? "dark" : "light"
                 );

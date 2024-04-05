@@ -45,7 +45,7 @@ export const fireToast = (message, type) => {
 const Notification = () => {
     return (
         <div>
-            <ToastContainer />
+            <ToastContainer className="myToastContainer" />
         </div>
     );
 };

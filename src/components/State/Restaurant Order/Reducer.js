@@ -30,16 +30,12 @@ export const restaurantOrderReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
-                orders: state.orders.map((order) => {
-                    if (order.id === action.payload.id) {
-                        return action.payload;
-                    }
-                    return order;
-                }),
+                orders: state.orders.map((order) =>
+                    order.id === action.payload.id ? action.payload : order
+                ),
             };
 
         case actionTypes.FILTER_ORDERS_SUCCESS:
-            console.log("inside reducer");
             if (action.payload === "ALL")
                 return {
                     ...state,

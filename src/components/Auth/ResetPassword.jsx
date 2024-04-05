@@ -21,20 +21,23 @@ function ResetPassword() {
         const req = { token, password };
         dispatch(resetPassword(req));
         setTimeout(() => {
-            console.log(auth);
-            if (auth.resetPassword.success !== null) {
-                fireToast(auth.resetPassword.success.message, "success");
-                setTimeout(() => {
-                    navigate("/account/login");
-                }, 5000);
-            } else {
-                fireToast(
-                    auth.resetPassword.error?.response.data.message ||
-                        auth.resetPassword.error?.message,
-                    "error"
-                );
-            }
-        }, 1500);
+            navigate("/account/login");
+        }, 5500);
+        // setTimeout(() => {
+        // console.log(auth);
+        // if (auth.resetPassword.success !== null) {
+        //     fireToast(auth.resetPassword.success.message, "success");
+        //     // setTimeout(() => {
+        //     //     navigate("/account/login");
+        //     // }, 5000);
+        // } else {
+        //     fireToast(
+        //         auth.resetPassword.error?.response.data.message ||
+        //             auth.resetPassword.error?.message,
+        //         "error"
+        //     );
+        // }
+        // }, 1500);
     };
     return (
         <div className="h-[92vh] flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

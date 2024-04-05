@@ -9,6 +9,7 @@ import Auth from "../Auth/Auth";
 import PaymentSuccess from "../Payment/PaymentSuccess";
 import PaymentFailure from "../Payment/PaymentFailure";
 import ResetPassword from "../Auth/ResetPassword";
+import Search from "../Search/Search";
 
 const CustomerRoute = () => {
     return (
@@ -16,6 +17,7 @@ const CustomerRoute = () => {
             <Navbar />
             <Routes>
                 <Route exact path="/" element={<Home />}></Route>
+                <Route exact path="/search" element={<Search />}></Route>
                 <Route
                     exact
                     path="/account/register"

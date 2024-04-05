@@ -36,13 +36,12 @@ const RestaurantDetail = () => {
         setFoodCategory(e.target.value);
     };
     const dispatch = useDispatch();
-    const jwt = localStorage.getItem("jwt");
     const { restaurant, menu } = useSelector((store) => store);
     const { id } = useParams();
 
     useEffect(() => {
-        dispatch(getRestaurantById({ id, jwt }));
-        dispatch(getRestaurantCategories({ jwt, restaurantId: id }));
+        dispatch(getRestaurantById({ id }));
+        dispatch(getRestaurantCategories({ restaurantId: id }));
     }, []);
     
     useEffect(() => {
@@ -54,7 +53,6 @@ const RestaurantDetail = () => {
         const category = foodCategory === "All" ? "" : foodCategory;
         dispatch(
             getMenuItemsByRestaurantId({
-                jwt,
                 restaurantId: id,
                 vegetarian: isVegetarian,
                 nonVegetarian: isNonVegetarian,
@@ -195,7 +193,7 @@ const RestaurantDetail = () => {
                         </div>
                     </div>
                 </div>
-                <div className="space-y-5 lg:w-[80%] lg:pl-10">
+                <div className="space-y-5 lg:w-[80%] lg:pl-10 lg:pb-10">
                     {menu.menuItems.map((item, index) => {
                         return <MenuCard key={index} item={item} />;
                     })}

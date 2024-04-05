@@ -16,8 +16,14 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { createOrder } from "../State/Orders/Action";
-import { clearCart, createAddress, getAllAddress } from "../State/Cart/Action";
+import {
+    clearCart,
+    createAddress,
+    findCart,
+    getAllAddress,
+} from "../State/Cart/Action";
 import { fireToast } from "../Notification/Notification";
+import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 
 export const style = {
     position: "absolute",
@@ -57,11 +63,16 @@ const Cart = () => {
     const [selectedAddress, setSelectedAddress] = useState(null);
     useEffect(() => {
         dispatch(getAllAddress(localStorage.getItem("jwt")));
+        dispatch(findCart(localStorage.getItem("jwt")));
     }, []);
     const chooseAddress = (item) => {
         if (hasChosen) {
-            setSelectedAddress(null);
-            setHasChosen(false);
+            if (item.id === selectedAddress.id) {
+                setSelectedAddress(null);
+                setHasChosen(false);
+            } else {
+                setSelectedAddress(item);
+            }
         } else {
             setSelectedAddress(item);
             setHasChosen(true);
@@ -100,113 +111,141 @@ const Cart = () => {
         handleClose();
     };
 
+    const handleClearCart = () => {
+        dispatch(clearCart());
+    };
+
     return (
         <div>
-            <main className="lg:flex justify-between ">
-                <section className="lg:w-[30%] space-y-6 lg:min-h-screen pt-10 max-h-screen overflow-y-scroll">
-                    {cart.cartItems.length > 0 ? (
-                        cart.cartItems.map((item, index) => {
-                            return <CartItem key={index} item={item} />;
-                        })
-                    ) : (
-                        <div className="text-center">Cart Empty</div>
-                    )}
-                    <Divider />
-                    <div className="billDetails px-5 text-sm">
-                        <p className="font-extralight py-5">Bill Details</p>
-                        <div className="space-y-3">
-                            <div className="flex justify-between">
-                                <p>Item total</p>
-                                <p>₹{cart.cart?.total}</p>
-                            </div>
-                            <div className="flex justify-between">
-                                <p>Delivery charge</p>
-                                <p>₹40</p>
-                            </div>
-                            <div className="flex justify-between">
-                                <p>GST and Platform charge</p>
-                                <p>₹30</p>
-                            </div>
-                            <Divider />
-                        </div>
-                        <div className="flex justify-between my-2">
-                            <p>Total Pay</p>
-                            <p>₹{cart.cart?.total + 70}</p>
-                        </div>
+            {cart.cartItems.length === 0 && (
+                <div className="min-h-[91vh] flex flex-col justify-center items-center text-center">
+                    <div className="flex flex-col items-center justify-center">
+                        <RemoveShoppingCartIcon sx={{ fontSize: "9rem" }} />
+                        <h1 className="py-5 text-2xl font-semibold">
+                            Cart Empty
+                        </h1>
                     </div>
-                </section>
-                <Divider orientation="vertical" flexItem />
-                <section className="lg:w-[70%] h-[90vh] flex flex-col justify-between px-5 pb-10 lg:pb-0">
-                    {cart.cartItems.length > 0 && (
-                        <div>
-                            <h1 className="text-center font-semibold text-2xl py-10">
-                                Choose delivery address
-                            </h1>
-                            <div className="flex gap-5 flex-wrap justify-center">
-                                {cart?.addresses.map((item, index) => {
-                                    return (
-                                        <AddressCard
-                                            chosen={
-                                                selectedAddress?.id === item.id
-                                            }
-                                            key={index}
-                                            chooseAddress={chooseAddress}
-                                            item={item}
-                                            showButton={true}
-                                        />
-                                    );
-                                })}
-
-                                <Card className="flex flex-col justify-between h-[auto]">
-                                    <div className="flex flex-col items-center gap-5 w-64 p-5">
-                                        <AddLocationAltIcon />
-                                        <div className="space-y-3">
-                                            <h1 className="font-semibold text-lg text-white">
-                                                Add New Address
-                                            </h1>
-                                        </div>
-                                    </div>
-                                    <div className="flex gap-5 w-64 p-2">
-                                        <Button
-                                            variant="outlined"
-                                            fullWidth
-                                            onClick={handleAddressOpenModal}
-                                        >
-                                            Add New Address
-                                        </Button>
-                                    </div>
-                                </Card>
-                            </div>
-                        </div>
-                    )}
-                    {cart.cartItems.length > 0 && (
-                        <div>
-                            <Tooltip
-                                title={
-                                    !hasChosen
-                                        ? "Please Choose Address"
-                                        : "Proceed to pay"
-                                }
-                                arrow
-                                placement="top"
-                            >
+                </div>
+            )}
+            {cart.cartItems.length !== 0 && (
+                <main className="lg:flex justify-between ">
+                    <section className="lg:w-[30%] space-y-6 h-[92vh] pt-4 overflow-y-scroll pb-10">
+                        {cart.cartItems.length !== 0 && (
+                            <div className="relative mx-5">
                                 <Button
                                     fullWidth
                                     variant="contained"
-                                    style={{
-                                        cursor: !hasChosen
-                                            ? "not-allowed"
-                                            : "pointer",
-                                    }}
-                                    onClick={createOrderRequest}
+                                    onClick={handleClearCart}
                                 >
-                                    Proceed to pay ₹{cart.cart?.total + 70}
+                                    Clear Cart
                                 </Button>
-                            </Tooltip>
+                            </div>
+                        )}
+                        {cart.cartItems.length > 0 ? (
+                            cart.cartItems.map((item, index) => {
+                                return <CartItem key={index} item={item} />;
+                            })
+                        ) : (
+                            <div className="text-center">Cart Empty</div>
+                        )}
+                        <Divider />
+                        <div className="billDetails px-5 text-sm">
+                            <p className="font-extralight py-5">Bill Details</p>
+                            <div className="space-y-3">
+                                <div className="flex justify-between">
+                                    <p>Item total</p>
+                                    <p>₹{cart.cart?.total}</p>
+                                </div>
+                                <div className="flex justify-between">
+                                    <p>Delivery charge</p>
+                                    <p>₹40</p>
+                                </div>
+                                <div className="flex justify-between">
+                                    <p>GST and Platform charge</p>
+                                    <p>₹30</p>
+                                </div>
+                                <Divider />
+                            </div>
+                            <div className="flex justify-between my-2">
+                                <p>Total Pay</p>
+                                <p>₹{cart.cart?.total + 70}</p>
+                            </div>
                         </div>
-                    )}
-                </section>
-            </main>
+                    </section>
+                    <Divider orientation="vertical" flexItem />
+                    <section className="lg:w-[70%] h-[90vh] flex flex-col justify-between px-5 pb-10 lg:pb-0">
+                        {cart.cartItems.length > 0 && (
+                            <div>
+                                <h1 className="text-center font-semibold text-2xl py-10">
+                                    Choose delivery address
+                                </h1>
+                                <div className="flex gap-5 flex-wrap justify-center">
+                                    {cart?.addresses.map((item, index) => {
+                                        return (
+                                            <AddressCard
+                                                chosen={
+                                                    selectedAddress?.id ===
+                                                    item.id
+                                                }
+                                                key={index}
+                                                chooseAddress={chooseAddress}
+                                                item={item}
+                                                showButton={true}
+                                            />
+                                        );
+                                    })}
+
+                                    <Card className="flex flex-col justify-between h-[auto]">
+                                        <div className="flex flex-col items-center gap-5 w-64 p-5">
+                                            <AddLocationAltIcon />
+                                            <div className="space-y-3">
+                                                <h1 className="font-semibold text-lg text-white">
+                                                    Add New Address
+                                                </h1>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-5 w-64 p-2">
+                                            <Button
+                                                variant="outlined"
+                                                fullWidth
+                                                onClick={handleAddressOpenModal}
+                                            >
+                                                Add New Address
+                                            </Button>
+                                        </div>
+                                    </Card>
+                                </div>
+                            </div>
+                        )}
+                        {cart.cartItems.length > 0 && (
+                            <div>
+                                <Tooltip
+                                    title={
+                                        !hasChosen
+                                            ? "Please Choose Address"
+                                            : "Proceed to pay"
+                                    }
+                                    arrow
+                                    placement="top"
+                                >
+                                    <Button
+                                        fullWidth
+                                        variant="contained"
+                                        style={{
+                                            cursor: !hasChosen
+                                                ? "not-allowed"
+                                                : "pointer",
+                                        }}
+                                        onClick={createOrderRequest}
+                                    >
+                                        Proceed to pay ₹{cart.cart?.total + 70}
+                                    </Button>
+                                </Tooltip>
+                            </div>
+                        )}
+                    </section>
+                </main>
+            )}
             <Modal
                 open={open}
                 onClose={handleClose}

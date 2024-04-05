@@ -17,17 +17,22 @@ const Orders = () => {
             <h1 className="text-xl text-center py-7 font-semibold">
                 My Orders
             </h1>
-            <div className="space-y-5 w-full lg:w-1/2">
-                {order.orders
-                    .sort(
-                        (a, b) =>
-                            new Date(b.createdAt).getTime() -
-                            new Date(a.createdAt).getTime()
-                    )
-                    .map((order, index) => (
-                        <OrderCard order={order} key={index} />
-                    ))}
-            </div>
+            {order.orders.length > 0 && (
+                <div className="space-y-5 w-full lg:w-1/2">
+                    {order.orders
+                        .sort(
+                            (a, b) =>
+                                new Date(b.createdAt).getTime() -
+                                new Date(a.createdAt).getTime()
+                        )
+                        .map((order, index) => (
+                            <OrderCard order={order} key={index} />
+                        ))}
+                </div>
+            )}
+            {order.orders.length === 0 && (
+                <div>You have not ordered anything</div>
+            )}
         </div>
     );
 };
