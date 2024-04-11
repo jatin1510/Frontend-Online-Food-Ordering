@@ -9,6 +9,9 @@ import {
     GET_USER_FAILURE,
     GET_USER_REQUEST,
     GET_USER_SUCCESS,
+    GOOGLE_LOGIN_FAILURE,
+    GOOGLE_LOGIN_REQUEST,
+    GOOGLE_LOGIN_SUCCESS,
     LOGIN_FAILURE,
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
@@ -38,6 +41,7 @@ export const authReducer = (state = initialState, action) => {
     switch (action.type) {
         case REGISTER_REQUEST:
         case LOGIN_REQUEST:
+        case GOOGLE_LOGIN_REQUEST:
         case GET_USER_REQUEST:
         case ADD_TO_FAVORITE_REQUEST:
         case RESET_PASSWORD_REQUEST:
@@ -46,6 +50,7 @@ export const authReducer = (state = initialState, action) => {
 
         case REGISTER_SUCCESS:
         case LOGIN_SUCCESS:
+        case GOOGLE_LOGIN_SUCCESS:
             return {
                 ...state,
                 isLoading: false,
@@ -54,7 +59,7 @@ export const authReducer = (state = initialState, action) => {
                 registrationError: null,
                 loginError: null,
             };
-            
+
         case GET_USER_SUCCESS:
             return {
                 ...state,
@@ -112,6 +117,7 @@ export const authReducer = (state = initialState, action) => {
             };
 
         case LOGIN_FAILURE:
+        case GOOGLE_LOGIN_FAILURE:
             return {
                 ...state,
                 isLoading: false,

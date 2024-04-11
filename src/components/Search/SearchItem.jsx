@@ -7,7 +7,9 @@ import ButtonBase from "@mui/material/ButtonBase";
 import Button from "@mui/material/Button";
 import { fireToast } from "../Notification/Notification";
 import { useNavigate } from "react-router-dom";
-
+import { useDispatch } from "react-redux";
+import { clearSearchMenuItem } from "../State/Menu/Action";
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 const Img = styled("img")({
     margin: "auto",
     display: "block",
@@ -17,14 +19,15 @@ const Img = styled("img")({
 
 const SearchItem = ({ item }) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const handleNavigateToRestaurant = () => {
         const restaurant = item.restaurant;
         if (restaurant.open) {
             navigate(
                 `/restaurant/${restaurant.address.city}/${restaurant.name}/${restaurant.id}`
             );
-        }
-        else{
+            dispatch(clearSearchMenuItem());
+        } else {
             fireToast("Restaurant is closed", "error");
         }
     };
@@ -34,9 +37,7 @@ const SearchItem = ({ item }) => {
                 width: "100%",
                 p: 2,
                 flexGrow: 1,
-                cursor: "pointer",
             }}
-            onClick={handleNavigateToRestaurant}
         >
             <Grid container spacing={2}>
                 <Grid item>
@@ -52,10 +53,17 @@ const SearchItem = ({ item }) => {
                     <Grid item xs container spacing={2}>
                         <Grid item xs>
                             <Typography gutterBottom component="div">
-                                <p className="font-bold text-xl">{item.restaurant.name}</p>
+                                <p className="font-bold text-xl">
+                                    {item.restaurant.name}
+                                </p>
                             </Typography>
                             <Typography variant="body2" gutterBottom>
-                            <p style={{fontWeight: 500}} className="text-sm">{item.name}</p>
+                                <p
+                                    style={{ fontWeight: 500 }}
+                                    className="text-sm"
+                                >
+                                    {item.name}
+                                </p>
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
                                 {item.description}
@@ -68,14 +76,17 @@ const SearchItem = ({ item }) => {
                         className="flex flex-col items-center justify-between"
                     >
                         <Grid item className="flex items-end justify-end">
-                            <Typography component="div">₹{item.price}</Typography>
+                            <Typography component="div">
+                                ₹{item.price}
+                            </Typography>
                         </Grid>
                         <Grid item>
                             <Button
-                                sx={{ cursor: "pointer" }}
+                                sx={{ cursor: "pointer", zIndex: 1000}}
                                 variant="contained"
+                                onClick={handleNavigateToRestaurant}
                             >
-                                Add to Cart
+                                <ArrowForwardIcon/>
                             </Button>
                         </Grid>
                     </Grid>

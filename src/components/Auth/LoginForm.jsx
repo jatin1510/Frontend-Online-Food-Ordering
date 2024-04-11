@@ -3,10 +3,11 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { Typography, Button, Grid, TextField, IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../State/Authentication/Action";
+import { useDispatch } from "react-redux";
+import { googleLoginUser, loginUser } from "../State/Authentication/Action";
 import CloseIcon from "@mui/icons-material/Close";
-import { fireToast } from "../Notification/Notification";
+import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 
 const initialValues = {
     email: "",
@@ -27,21 +28,8 @@ const validationSchema = new Yup.ObjectSchema({
 const LoginForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { auth } = useSelector((store) => store);
     const handleSubmit = (values) => {
         dispatch(loginUser({ userData: values, navigate }));
-        console.log(auth);
-        setTimeout(() => {
-            if (!auth.loginError) {
-                fireToast("Login Successful", "success");
-            } else {
-                fireToast(
-                    auth.loginError?.response.data.message ||
-                        auth.loginError.message,
-                    "error"
-                );
-            }
-        }, 1000);
     };
 
     return (
@@ -158,6 +146,34 @@ const LoginForm = () => {
                     Register
                 </Button>
             </Typography>
+            <div className="flex flex-row items-center justify-center pt-2">
+                <GoogleLogin
+                    onSuccess={async (credentialResponse) => {
+                        console.log(credentialResponse);
+                        const data = jwtDecode(credentialResponse.credential);
+                        if (
+                            data.azp === process.env.REACT_APP_GOOGLE_CLIENT_ID
+                        ) {
+                            console.log("Valid Token");
+                        } else {
+                            console.log("Invalid Token");
+                            return;
+                        }
+
+                        const userData = {
+                            email: data.email,
+                            fullName: data.name,
+                            password: data.sub,
+                        };
+
+                        dispatch(googleLoginUser({ userData, navigate }));
+                    }}
+                    onError={() => {
+                        console.log("Login Failed");
+                    }}
+                />
+                {/* <Button onClick={() => googleLogin()}>Login with Google</Button> */}
+            </div>
         </div>
     );
 };

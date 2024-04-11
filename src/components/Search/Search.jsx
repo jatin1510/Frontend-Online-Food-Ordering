@@ -1,18 +1,24 @@
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { topMeals } from "../Home/TopMeals";
-import { searchMenuItem } from "../State/Menu/Action";
+import { clearSearchMenuItem, searchMenuItem } from "../State/Menu/Action";
 import { useDispatch, useSelector } from "react-redux";
 import SearchItem from "./SearchItem";
+import Loading from "../Loading/Loading";
 
 const Search = () => {
     const [query, setQuery] = useState("");
     const [typingTimer, setTypingTimer] = useState(null);
-    const doneTypingInterval = 1000; // milliseconds
+    const doneTypingInterval = 500; // milliseconds
     const dispatch = useDispatch();
     const { menu } = useSelector((store) => store);
+    const [isLoading, setIsLoading] = useState(false);
     const onSearch = (keyword) => {
-        dispatch(searchMenuItem(keyword));
+        setIsLoading(true);
+        setTimeout(() => {
+            dispatch(searchMenuItem(keyword));
+            setIsLoading(false);
+        }, 1000);
     };
     const handleInputChange = (event) => {
         const input = event.target.value;
@@ -21,26 +27,28 @@ const Search = () => {
         setTypingTimer(
             setTimeout(() => {
                 if (input.trim() !== "") {
-                    console.log("searching... ", input);
+                    localStorage.setItem("search", input);
                     onSearch(input);
+                } else {
+                    localStorage.removeItem("search");
+                    dispatch(clearSearchMenuItem());
                 }
             }, doneTypingInterval)
         );
     };
 
     const handleClick = (keyword) => {
+        localStorage.setItem("search", keyword);
         setQuery(keyword);
         onSearch(keyword);
     };
-
-    
 
     return (
         <div className="flex flex-col items-start justify-start h-[92vh] px-72">
             <div className="w-full mt-10 mb-5">
                 <TextField
                     onFocus={(e) => e.target.select()}
-                    value={query}
+                    value={localStorage.getItem('search') || query}
                     fullWidth
                     id="search"
                     name="search"
@@ -71,11 +79,15 @@ const Search = () => {
                     ))}
                 </div>
             </div>
-            <div className="space-y-5 w-full lg:py-5 lg:pb-10">
-                {menu.search.map((item, index) => {
-                    return <SearchItem key={index} item={item} />;
-                })}
-            </div>
+            {isLoading ? (
+                <Loading />
+            ) : (
+                <div className="space-y-5 w-full lg:py-5 lg:pb-10">
+                    {menu.search.map((item, index) => {
+                        return <SearchItem key={index} item={item} />;
+                    })}
+                </div>
+            )}
         </div>
     );
 };

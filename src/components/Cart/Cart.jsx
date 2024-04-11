@@ -113,6 +113,7 @@ const Cart = () => {
 
     const handleClearCart = () => {
         dispatch(clearCart());
+        fireToast("Cart Cleared");
     };
 
     return (

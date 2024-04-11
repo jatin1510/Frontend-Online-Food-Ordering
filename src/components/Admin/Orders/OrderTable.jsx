@@ -125,7 +125,7 @@ const OrderTable = ({ filterValue = "all" }) => {
                                             </AvatarGroup>
                                         </TableCell>
                                         <TableCell>
-                                            {item.customer?.fullName}
+                                            {item.customer?.email}
                                         </TableCell>
                                         <TableCell align="right">
                                             {item.totalPrice}

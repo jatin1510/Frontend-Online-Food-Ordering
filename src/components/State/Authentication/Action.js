@@ -10,6 +10,9 @@ import {
     GET_USER_FAILURE,
     GET_USER_REQUEST,
     GET_USER_SUCCESS,
+    GOOGLE_LOGIN_FAILURE,
+    GOOGLE_LOGIN_REQUEST,
+    GOOGLE_LOGIN_SUCCESS,
     LOGIN_FAILURE,
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
@@ -34,9 +37,14 @@ export const registerUser = (req) => async (dispatch) => {
         }
         dispatch({ type: REGISTER_SUCCESS, payload: data.jwt });
         console.log("Register Success: ", data);
+        fireToast("Registration Successful", "success");
     } catch (error) {
         dispatch({ type: REGISTER_FAILURE, payload: error });
         console.log(error);
+        fireToast(
+            error?.response?.data?.message || error?.message,
+            "error"
+        );
     }
 };
 
@@ -53,9 +61,38 @@ export const loginUser = (req) => async (dispatch) => {
         }
         dispatch({ type: LOGIN_SUCCESS, payload: data.jwt });
         console.log("Login Success: ", data);
+        fireToast("Login Successful", "success");
     } catch (error) {
         console.log(error);
         dispatch({ type: LOGIN_FAILURE, payload: error });
+        fireToast(
+            error?.response?.data?.message || error?.message,
+            "error"
+        );
+    }
+};
+
+export const googleLoginUser = (req) => async (dispatch) => {
+    dispatch({ type: GOOGLE_LOGIN_REQUEST });
+    try {
+        const { data } = await api.post(`/auth/google-signin`, req.userData);
+        if (data.jwt) localStorage.setItem("jwt", data.jwt);
+        if (data.role) localStorage.setItem("role", data.role);
+        if (data.role === "ROLE_RESTAURANT_OWNER") {
+            req.navigate("/admin/restaurant");
+        } else {
+            req.navigate("/");
+        }
+        dispatch({ type: GOOGLE_LOGIN_SUCCESS, payload: data.jwt });
+        console.log("Login Success: ", data);
+        fireToast("Login Successful", "success");
+    } catch (error) {
+        console.log(error);
+        dispatch({ type: GOOGLE_LOGIN_FAILURE, payload: error });
+        fireToast(
+            error?.response?.data?.message || error?.message,
+            "error"
+        );
     }
 };
 
@@ -139,7 +176,6 @@ export const logout = () => async (dispatch) => {
     try {
         localStorage.clear();
         dispatch({ type: LOGOUT });
-        console.log("Logged Out");
     } catch (error) {
         console.log(error);
     }

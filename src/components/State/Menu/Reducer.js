@@ -65,6 +65,12 @@ export const menuItemReducer = (state = initialState, action) => {
                 search: action.payload,
             };
 
+        case actionTypes.CLEAR_SEARCH_MENU_ITEM:
+            return {
+                ...state,
+                search: [],
+            };
+            
         case actionTypes.CREATE_MENU_ITEM_FAILURE:
         case actionTypes.GET_MENU_ITEMS_BY_RESTAURANT_ID_FAILURE:
         case actionTypes.DELETE_MENU_ITEM_FAILURE:

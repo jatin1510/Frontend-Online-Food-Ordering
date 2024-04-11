@@ -13,10 +13,9 @@ import {
     IconButton,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { registerUser } from "../State/Authentication/Action";
 import CloseIcon from "@mui/icons-material/Close";
-import { fireToast } from "../Notification/Notification";
 
 const initialValues = {
     fullName: "",
@@ -41,20 +40,8 @@ const RegisterForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { auth } = useSelector((store) => store);
     const handleSubmit = (values) => {
         dispatch(registerUser({ userData: values, navigate }));
-        setTimeout(() => {
-            if (!auth.registrationError) {
-                fireToast("Register Successful", "success");
-            } else {
-                fireToast(
-                    auth.registrationError.response.data.message ||
-                        auth.registrationError.message,
-                    "error"
-                );
-            }
-        }, 700);
     };
     return (
         <div>

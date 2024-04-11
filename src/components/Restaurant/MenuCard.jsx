@@ -39,7 +39,7 @@ const MenuCard = ({ item }) => {
 
     const handleAddItemToCart = (e) => {
         e.preventDefault();
-        if(localStorage.getItem("jwt") === null){
+        if (localStorage.getItem("jwt") === null) {
             fireToast("🦄 Please login to add items to cart");
             return;
         }

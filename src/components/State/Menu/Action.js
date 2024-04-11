@@ -1,4 +1,5 @@
 import {
+    CLEAR_SEARCH_MENU_ITEM,
     CREATE_MENU_ITEM_FAILURE,
     CREATE_MENU_ITEM_REQUEST,
     CREATE_MENU_ITEM_SUCCESS,
@@ -62,7 +63,9 @@ export const searchMenuItem = (keyword) => {
     return async (dispatch) => {
         dispatch({ type: SEARCH_MENU_ITEM_REQUEST });
         try {
-            const { data } = await api.get(`/api/food/search?keyword=${keyword}`);
+            const { data } = await api.get(
+                `/api/food/search?keyword=${keyword}`
+            );
             console.log("Got menu items: ", data);
             dispatch({ type: SEARCH_MENU_ITEM_SUCCESS, payload: data });
         } catch (error) {
@@ -118,5 +121,11 @@ export const deleteMenuItem = ({ menuItemId, jwt }) => {
             console.log("Error deleting menu item: ", error);
             dispatch({ type: DELETE_MENU_ITEM_FAILURE, payload: error });
         }
+    };
+};
+
+export const clearSearchMenuItem = () => {
+    return async (dispatch) => {
+        dispatch({ type: CLEAR_SEARCH_MENU_ITEM });
     };
 };
