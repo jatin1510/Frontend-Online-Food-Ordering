@@ -18,7 +18,7 @@ const Search = () => {
         setTimeout(() => {
             dispatch(searchMenuItem(keyword));
             setIsLoading(false);
-        }, 1000);
+        }, 500);
     };
     const handleInputChange = (event) => {
         const input = event.target.value;
@@ -48,7 +48,7 @@ const Search = () => {
             <div className="w-full mt-10 mb-5">
                 <TextField
                     onFocus={(e) => e.target.select()}
-                    value={localStorage.getItem('search') || query}
+                    value={localStorage.getItem("search") || query}
                     fullWidth
                     id="search"
                     name="search"
@@ -86,6 +86,13 @@ const Search = () => {
                     {menu.search.map((item, index) => {
                         return <SearchItem key={index} item={item} />;
                     })}
+                </div>
+            )}
+            {!isLoading && menu.search.length === 0 && localStorage.getItem("search") && (
+                <div className="flex flex-row mx-auto">
+                    <div>
+                        No result found for <b>{localStorage.getItem("search")}</b>
+                    </div>
                 </div>
             )}
         </div>

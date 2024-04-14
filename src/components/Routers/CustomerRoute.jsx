@@ -36,7 +36,7 @@ const CustomerRoute = () => {
                 />
                 <Route
                     exact
-                    path="/restaurant/:city/:title/:id"
+                    path="/restaurant/:id"
                     element={<RestaurantDetail />}
                 ></Route>
                 <Route exact path="/cart" element={<Cart />}></Route>

@@ -20,7 +20,7 @@ const EventCard = ({ item }) => {
         >
             <CardMedia sx={{ height: 345 }} image={item?.images[0]} />
             <CardContent>
-                <div className="flex flex-row items-center justify-between">
+                <div className="flex flex-row items-center justify-between pb-2">
                     <Typography variant="h5">{item.restaurant.name}</Typography>
                     {checkTimeIntersection() && <Chip color="success" label={"Live"}>
                         Live

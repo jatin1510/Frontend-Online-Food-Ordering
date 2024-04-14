@@ -44,6 +44,11 @@ const MenuCard = ({ item }) => {
             return;
         }
 
+        if (!item.available) {
+            fireToast("🦄 Item is out of stock");
+            return;
+        }
+
         var array1 = selectedIngredients;
         for (const cartItem of cart.cartItems) {
             var array2 = cartItem.ingredients;

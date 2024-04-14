@@ -25,9 +25,8 @@ const RestaurantCard = ({ item }) => {
 
     const handleNavigateToRestaurant = () => {
         if (item.open) {
-            console.log(item);
             navigate(
-                `/restaurant/${item.address.city}/${item.name}/${item.id}`
+                `/restaurant/${item.id}`
             );
         }
     };

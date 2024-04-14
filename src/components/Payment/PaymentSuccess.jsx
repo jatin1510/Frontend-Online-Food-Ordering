@@ -5,12 +5,18 @@ import { Button, Card } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { clearCart } from "../State/Cart/Action";
+import { useParams } from "react-router-dom";
+import { paymentSuccess } from "../State/Orders/Action";
 
 const PaymentSuccess = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { id } = useParams();
     useEffect(() => {
         dispatch(clearCart());
+        const req = { orderId: id, jwt: localStorage.getItem("jwt") };
+        console.log("Payment success req: ", req);
+        dispatch(paymentSuccess({ orderId: id, jwt: localStorage.getItem("jwt") }));
     }, []);
     return (
         <div className="min-h-screen px-5">
@@ -29,9 +35,9 @@ const PaymentSuccess = () => {
                         variant="contained"
                         className="py-5"
                         sx={{ margin: "1rem 0rem" }}
-                        onClick={() => navigate("/")}
+                        onClick={() => navigate("/profile/orders")}
                     >
-                        Go to Home
+                        Go to Orders
                     </Button>
                 </Card>
             </div>

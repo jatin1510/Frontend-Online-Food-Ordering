@@ -1,12 +1,8 @@
-import {
-    Card,
-    Chip,
-    Divider,
-    Paper,
-    Tooltip,
-} from "@mui/material";
+import { Card, Chip, Divider, Paper, Tooltip } from "@mui/material";
 import React from "react";
 import InfoIcon from "@mui/icons-material/Info";
+import { useDispatch } from "react-redux";
+import { getPaymentLink } from "../State/Orders/Action";
 
 const colorObject = {
     PENDING: "error",
@@ -15,9 +11,22 @@ const colorObject = {
     COMPLETED: "success",
 };
 
-const OrderCard = ({ item, order }) => {
+const OrderCard = ({ order }) => {
+    const dispatch = useDispatch();
+    const handlePayment = () => {
+        if (order.paymentSuccess) return;
+        const data = dispatch(
+            getPaymentLink({
+                orderId: order.id,
+                jwt: localStorage.getItem("jwt"),
+            })
+        );
+        data.then((url) => {
+            window.location.href = url;
+        });
+    };
     return (
-        <Card className="p-5">
+        <Card className={`p-5`}>
             <div className="flex flex-row justify-between pb-3">
                 <div className="flex flex-row space-x-2">
                     <img
@@ -38,11 +47,24 @@ const OrderCard = ({ item, order }) => {
                         </span>
                     </div>
                 </div>
-                <div className="flex flex-row justify-center items-center">
+                <div
+                    className={`flex flex-row justify-center items-center ${
+                        order.paymentSuccess ? "" : "cursor-pointer"
+                    }`}
+                    onClick={handlePayment}
+                >
                     <Chip
-                        label={order.orderStatus}
+                        label={
+                            order.paymentSuccess
+                                ? order.orderStatus
+                                : `Pay ₹${order.totalPrice}`
+                        }
                         variant="filled"
-                        color={colorObject[order.orderStatus]}
+                        color={
+                            order.paymentSuccess
+                                ? colorObject[order.orderStatus]
+                                : "info"
+                        }
                     ></Chip>
                 </div>
             </div>
@@ -60,7 +82,8 @@ const OrderCard = ({ item, order }) => {
                     </span>
                     <span>
                         {new Date(order.createdAt).toLocaleDateString()} at{" "}
-                        {new Date(order.createdAt).getHours()}:{new Date(order.createdAt).getMinutes()}
+                        {new Date(order.createdAt).getHours()}:
+                        {new Date(order.createdAt).getMinutes()}
                     </span>
                 </div>
                 <div className="flex flex-row items-center">
@@ -117,15 +140,18 @@ const OrderCard = ({ item, order }) => {
                                         <span>{item.totalPrice}</span>
                                     </div>
                                     <div className="space-x-1 py-1">
-                                        {item.ingredients.map((ingredient) => {
-                                            return (
-                                                <Chip
-                                                    size="small"
-                                                    variant="outlined"
-                                                    label={ingredient}
-                                                ></Chip>
-                                            );
-                                        })}
+                                        {item.ingredients.map(
+                                            (ingredient, index2) => {
+                                                return (
+                                                    <Chip
+                                                        key={index2}
+                                                        size="small"
+                                                        variant="outlined"
+                                                        label={ingredient}
+                                                    ></Chip>
+                                                );
+                                            }
+                                        )}
                                     </div>
                                 </div>
                                 <img

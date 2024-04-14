@@ -13,6 +13,7 @@ import { uploadToCloudinary } from "./Utils/UploadToCloudinary";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { createRestaurant } from "../State/Restaurant/Action";
+import { fireToast } from "../Notification/Notification";
 
 const validationSchema = Yup.object({
     name: Yup.string().required("Restaurant name is required"),
@@ -34,7 +35,9 @@ const validationSchema = Yup.object({
     instagram: Yup.string()
         .url("Invalid Url")
         .required("Instagram link is required"),
-    images: Yup.array().min(1, "At least one image is required"),
+    images: Yup.array()
+        .min(1, "At least one image is required")
+        .max(3, "Maximum 3 images are allowed"),
 });
 
 const CreateRestaurantForm = () => {
@@ -83,7 +86,6 @@ const CreateRestaurantForm = () => {
                 },
                 images: values.images,
             };
-            console.log("data ", data);
             dispatch(createRestaurant({ jwt, data }));
         },
     });
@@ -91,11 +93,17 @@ const CreateRestaurantForm = () => {
     // eslint-disable-next-line
     const [uploadingImage, setUploadingImage] = useState(false);
     const handleImageChange = async (event) => {
-        const file = event.target.files[0];
-        setUploadingImage(true);
-        const image = await uploadToCloudinary(file);
-        formik.setFieldValue("images", [...formik.values.images, image]);
-        setUploadingImage(false);
+        if(event.target.files.length + formik.values.images.length > 3) {
+            fireToast("Maximum 3 images are allowed", "error");
+            return;
+        }
+        for (let index = 0; index < event.target.files.length; index++) {
+            const file = event.target.files[index];
+            setUploadingImage(true);
+            const image = await uploadToCloudinary(file);
+            formik.values.images.push(image);
+            setUploadingImage(false);
+        }
     };
 
     const handleRemoveImage = (index) => {
@@ -114,6 +122,7 @@ const CreateRestaurantForm = () => {
                     <Grid container spacing={2}>
                         <Grid item xs={12} className="flex flex-wrap gap-5">
                             <input
+                                multiple
                                 type="file"
                                 accept="image/*"
                                 id="fileInput"

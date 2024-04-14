@@ -13,6 +13,7 @@ export const orderReducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.CREATE_ORDER_REQUEST:
         case actionTypes.GET_USER_ORDERS_REQUEST:
+        case actionTypes.PAYMENT_REQUEST:
             // case actionTypes.GET_USER_NOTIFICATIONS_REQUEST:
             return {
                 ...state,
@@ -33,9 +34,21 @@ export const orderReducer = (state = initialState, action) => {
                 loading: false,
                 orders: action.payload,
             };
+        
+        case actionTypes.PAYMENT_SUCCESS:
+            return {
+                ...state,
+                orders: state.orders.map((order) =>
+                    order.id === action.payload
+                        ? { ...order, paymentSuccess: true }
+                        : order
+                ),
+                loading: false,
+            };
 
         case actionTypes.CREATE_ORDER_FAILURE:
         case actionTypes.GET_USER_ORDERS_FAILURE:
+        case actionTypes.PAYMENT_FAILURE:
             // case actionTypes.GET_USER_NOTIFICATIONS_FAILURE:
             return {
                 ...state,

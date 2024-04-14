@@ -13,7 +13,7 @@ const Events = () => {
     return (
         <div className="flex items-center flex-col">
             <h1 className="text-xl text-center py-7 font-semibold">Events</h1>
-            <div className="px-5 flex flex-wrap gap-5 m-auto justify-center">
+            <div className="px-5 flex flex-wrap gap-5 m-auto justify-center pb-10">
                 {restaurant.events.map((item, index) => {
                     return <EventCard key={index} item={item} />;
                 })}

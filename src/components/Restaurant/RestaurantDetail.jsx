@@ -30,7 +30,6 @@ const RestaurantDetail = () => {
     const [foodCategory, setFoodCategory] = useState("All");
     const handleTypeFilter = (e) => {
         setFoodType(e.target.value);
-        console.log(e.target.value);
     };
     const handleCategoryFilter = (e) => {
         setFoodCategory(e.target.value);

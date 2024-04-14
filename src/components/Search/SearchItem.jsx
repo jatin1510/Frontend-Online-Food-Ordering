@@ -23,10 +23,11 @@ const SearchItem = ({ item }) => {
     const handleNavigateToRestaurant = () => {
         const restaurant = item.restaurant;
         if (restaurant.open) {
-            navigate(
-                `/restaurant/${restaurant.address.city}/${restaurant.name}/${restaurant.id}`
-            );
             dispatch(clearSearchMenuItem());
+            localStorage.removeItem("search");
+            navigate(
+                `/restaurant/${restaurant.id}`
+            );
         } else {
             fireToast("Restaurant is closed", "error");
         }

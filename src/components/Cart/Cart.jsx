@@ -84,6 +84,10 @@ const Cart = () => {
     const handleClose = () => setOpen(false);
     const handleAddressOpenModal = () => setOpen(true);
     const createOrderRequest = () => {
+        if (selectedAddress === null) {
+            fireToast("Please choose an address");
+            return;
+        }
         const req = {
             jwt: localStorage.getItem("jwt"),
             data: {
@@ -92,6 +96,9 @@ const Cart = () => {
             },
         };
         dispatch(createOrder(req));
+        setTimeout(() => {
+            dispatch(clearCart());
+        }, 200);
     };
 
     const handleAddressSubmit = (values) => {
@@ -200,7 +207,7 @@ const Cart = () => {
                                         <div className="flex flex-col items-center gap-5 w-64 p-5">
                                             <AddLocationAltIcon />
                                             <div className="space-y-3">
-                                                <h1 className="font-semibold text-lg text-white">
+                                                <h1 className="font-semibold text-lg">
                                                     Add New Address
                                                 </h1>
                                             </div>
@@ -211,7 +218,7 @@ const Cart = () => {
                                                 fullWidth
                                                 onClick={handleAddressOpenModal}
                                             >
-                                                Add New Address
+                                                Add
                                             </Button>
                                         </div>
                                     </Card>
@@ -223,7 +230,7 @@ const Cart = () => {
                                 <Tooltip
                                     title={
                                         !hasChosen
-                                            ? "Please Choose Address"
+                                            ? "Please Choose an Address"
                                             : "Proceed to pay"
                                     }
                                     arrow

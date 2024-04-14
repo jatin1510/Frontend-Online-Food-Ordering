@@ -8,6 +8,7 @@ import { googleLoginUser, loginUser } from "../State/Authentication/Action";
 import CloseIcon from "@mui/icons-material/Close";
 import { GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
+import { useTheme } from "@emotion/react";
 
 const initialValues = {
     email: "",
@@ -31,7 +32,7 @@ const LoginForm = () => {
     const handleSubmit = (values) => {
         dispatch(loginUser({ userData: values, navigate }));
     };
-
+    const theme = useTheme();
     return (
         <div>
             <div className="flex flex-row justify-between">
@@ -148,6 +149,7 @@ const LoginForm = () => {
             </Typography>
             <div className="flex flex-row items-center justify-center pt-2">
                 <GoogleLogin
+                    theme={theme.palette.mode === "dark" ? "filled_black": "outline"}
                     onSuccess={async (credentialResponse) => {
                         console.log(credentialResponse);
                         const data = jwtDecode(credentialResponse.credential);

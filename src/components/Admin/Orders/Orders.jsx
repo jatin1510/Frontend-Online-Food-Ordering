@@ -20,14 +20,14 @@ const orderStatus = [
 // TODO: If i have all the orders, why should i request backend for each filter?
 
 const Orders = () => {
-    var [filterValue, setFilterValue] = useState("");
+    var [filterValue, setFilterValue] = useState("all");
     const handleChangeFilter = (e, value) => {
         setFilterValue(value);
         console.log(filterValue);
     };
 
     const dispatch = useDispatch();
-    const { restaurant, restaurantOrder } = useSelector((store) => store);
+    const { restaurant } = useSelector((store) => store);
     useEffect(() => {
         filterValue = filterValue === "all" ? "" : filterValue;
         dispatch(

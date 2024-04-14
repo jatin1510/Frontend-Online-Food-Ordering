@@ -18,7 +18,7 @@ const Orders = () => {
                 My Orders
             </h1>
             {order.orders.length > 0 && (
-                <div className="space-y-5 w-full lg:w-1/2">
+                <div className="space-y-5 w-full lg:w-1/2 pb-10">
                     {order.orders
                         .sort(
                             (a, b) =>

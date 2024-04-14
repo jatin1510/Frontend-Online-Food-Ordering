@@ -35,7 +35,6 @@ const ProfileNavigation = ({ open, handleClose, setOpenSideBar }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
-    console.log(location.pathname.substring(8));
 
     const handleNavigate = (path) => {
         if (path === "logout") {
@@ -63,6 +62,7 @@ const ProfileNavigation = ({ open, handleClose, setOpenSideBar }) => {
                         return (
                             <>
                                 <div
+                                    key={index}
                                     onClick={() => {
                                         handleNavigate(
                                             item.title.toLowerCase()

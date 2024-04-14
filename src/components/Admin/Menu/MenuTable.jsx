@@ -100,11 +100,11 @@ const MenuTable = () => {
                                     }}
                                 >
                                     <TableCell>
-                                        <Avatar src={item.images[0]}/>
+                                        <Avatar src={item.images[0]} />
                                     </TableCell>
                                     <TableCell>{item.name}</TableCell>
-                                    <TableCell>
-                                        <div className="space-x-2 flex flex-wrap">
+                                    <TableCell className="max-w-[25vw]">
+                                        <div className="flex flex-wrap gap-1">
                                             {item.ingredients.map(
                                                 (ingredient) => (
                                                     <Chip
@@ -114,6 +114,7 @@ const MenuTable = () => {
                                                         //         ? "success"
                                                         //         : "error"
                                                         // }
+                                                        sx={{ my: "3px" }}
                                                         color="info"
                                                         variant="filled"
                                                         label={ingredient.name}
@@ -125,9 +126,8 @@ const MenuTable = () => {
                                     <TableCell align="right">
                                         ₹&nbsp;{item.price}
                                     </TableCell>
-                                    <TableCell align="center">
+                                    <TableCell align="center" className="w-[15%]">
                                         <Button
-                                            sx={{ width: "70%" }}
                                             onClick={() => {
                                                 handleUpdateMenuItemStock(
                                                     item.id
