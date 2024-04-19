@@ -87,7 +87,7 @@ const OrderTable = ({ filterValue = "all" }) => {
                         <TableHead>
                             <TableRow>
                                 <TableCell>Id</TableCell>
-                                <TableCell align="center">Image</TableCell>
+                                <TableCell align="right">Image</TableCell>
                                 <TableCell>Customer</TableCell>
                                 <TableCell align="right">Price</TableCell>
                                 <TableCell>Items</TableCell>
@@ -96,7 +96,13 @@ const OrderTable = ({ filterValue = "all" }) => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {restaurantOrder.orders.map((item, index) => {
+                            {restaurantOrder.orders
+                            .sort(
+                                (a, b) =>
+                                    new Date(b.createdAt).getTime() -
+                                    new Date(a.createdAt).getTime()
+                            )
+                            .map((item, index) => {
                                 return (
                                     <TableRow
                                         key={item.id}
@@ -125,7 +131,12 @@ const OrderTable = ({ filterValue = "all" }) => {
                                             </AvatarGroup>
                                         </TableCell>
                                         <TableCell>
-                                            {item.customer?.email}
+                                                <div className="font-semibold text-sm">
+                                                    {item.customer?.fullName}
+                                                </div>
+                                                <div className="text-xs">
+                                                    {item.customer?.email}
+                                                </div>
                                         </TableCell>
                                         <TableCell align="right">
                                             {item.totalPrice}
@@ -195,6 +206,7 @@ const OrderTable = ({ filterValue = "all" }) => {
                                                     handleClick(e, item.id)
                                                 }
                                                 color="primary"
+                                                variant="outlined"
                                             >
                                                 Update
                                             </Button>

@@ -17,6 +17,7 @@ const PaymentSuccess = () => {
         const req = { orderId: id, jwt: localStorage.getItem("jwt") };
         console.log("Payment success req: ", req);
         dispatch(paymentSuccess({ orderId: id, jwt: localStorage.getItem("jwt") }));
+        dispatch(clearCart());
     }, []);
     return (
         <div className="min-h-screen px-5">

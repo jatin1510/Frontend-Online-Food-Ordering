@@ -14,6 +14,7 @@ export const orderReducer = (state = initialState, action) => {
         case actionTypes.CREATE_ORDER_REQUEST:
         case actionTypes.GET_USER_ORDERS_REQUEST:
         case actionTypes.PAYMENT_REQUEST:
+        case actionTypes.DELETE_ORDER_REQUEST:
             // case actionTypes.GET_USER_NOTIFICATIONS_REQUEST:
             return {
                 ...state,
@@ -46,9 +47,19 @@ export const orderReducer = (state = initialState, action) => {
                 loading: false,
             };
 
+        case actionTypes.DELETE_ORDER_SUCCESS:
+            return {
+                ...state,
+                orders: state.orders.filter(
+                    (order) => order.id !== action.payload
+                ),
+                loading: false,
+            };
+
         case actionTypes.CREATE_ORDER_FAILURE:
         case actionTypes.GET_USER_ORDERS_FAILURE:
         case actionTypes.PAYMENT_FAILURE:
+        case actionTypes.DELETE_ORDER_FAILURE:
             // case actionTypes.GET_USER_NOTIFICATIONS_FAILURE:
             return {
                 ...state,

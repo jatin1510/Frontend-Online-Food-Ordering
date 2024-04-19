@@ -3,6 +3,9 @@ import {
     CREATE_ORDER_FAILURE,
     CREATE_ORDER_REQUEST,
     CREATE_ORDER_SUCCESS,
+    DELETE_ORDER_FAILURE,
+    DELETE_ORDER_REQUEST,
+    DELETE_ORDER_SUCCESS,
     GET_PAYMENT_LINK,
     GET_USER_ORDERS_FAILURE,
     GET_USER_ORDERS_REQUEST,
@@ -21,6 +24,7 @@ export const createOrder = (req) => {
                     Authorization: `Bearer ${req.jwt}`,
                 },
             });
+            console.log("URL: ", data.payment_url);
             if (data.payment_url) {
                 window.location.href = data.payment_url;
             }
@@ -91,3 +95,21 @@ export const getPaymentLink = (req) => {
         }
     };
 };
+
+export const deleteOrder = (req) => {
+    return async (dispatch) => {
+        dispatch({ type: DELETE_ORDER_REQUEST });
+        try {
+            const response = await api.delete(`/api/order/payment/failure/${req.orderId}`, {
+                headers: {
+                    Authorization: `Bearer ${req.jwt}`,
+                },
+            });
+            console.log("Delete order data: ", response);
+            dispatch({ type: DELETE_ORDER_SUCCESS, payload: req.orderId });
+        } catch (error) {
+            console.log("Delete order error: ", error);
+            dispatch({ type: DELETE_ORDER_FAILURE, payload: error });
+        }
+    };
+}

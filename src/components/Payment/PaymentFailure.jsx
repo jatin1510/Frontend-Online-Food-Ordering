@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import GppBadIcon from "@mui/icons-material/GppBad";
 import { red } from "@mui/material/colors";
 import { Button, Card } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { deleteOrder } from "../State/Orders/Action";
 
 const PaymentFailure = () => {
     const navigate = useNavigate();
+    const { id } = useParams();
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const req = { orderId: id, jwt: localStorage.getItem("jwt") };
+        dispatch(deleteOrder(req));
+    }, []);
     return (
         <div className="min-h-screen px-5">
             <div className="flex flex-col items-center justify-center h-[90vh]">
@@ -21,9 +30,7 @@ const PaymentFailure = () => {
                         If money was debited from your account, it will be
                         refunded automatically in 5-7 working days.
                     </p>
-                    <p className="py-2 text-center text-lg">
-                        Have a Great Day
-                    </p>
+                    <p className="py-2 text-center text-lg">Have a Great Day</p>
                     <Button
                         variant="contained"
                         className="py-5"

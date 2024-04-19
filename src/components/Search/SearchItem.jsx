@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { clearSearchMenuItem } from "../State/Menu/Action";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { useTheme } from "@emotion/react";
 const Img = styled("img")({
     margin: "auto",
     display: "block",
@@ -18,6 +19,7 @@ const Img = styled("img")({
 });
 
 const SearchItem = ({ item }) => {
+    const theme = useTheme();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const handleNavigateToRestaurant = () => {
@@ -38,6 +40,10 @@ const SearchItem = ({ item }) => {
                 width: "100%",
                 p: 2,
                 flexGrow: 1,
+                ":hover": {
+                    backgroundColor: theme.palette.mode === "light" ? "rgba(0, 0, 0, 0.04)" : "rgba(255, 255, 255, 0.04)",
+                    cursor: "pointer",
+                }
             }}
         >
             <Grid container spacing={2}>

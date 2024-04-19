@@ -48,7 +48,7 @@ const CustomerRoute = () => {
                 ></Route>
                 <Route
                     exact
-                    path="/payment/failure"
+                    path="/payment/failure/:id"
                     element={<PaymentFailure />}
                 ></Route>
             </Routes>

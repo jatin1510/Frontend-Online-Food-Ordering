@@ -7,6 +7,7 @@ import {
     Modal,
     TextField,
     Tooltip,
+    Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import CartItem from "./CartItem";
@@ -22,8 +23,10 @@ import {
     findCart,
     getAllAddress,
 } from "../State/Cart/Action";
+import MyLocationIcon from "@mui/icons-material/MyLocation";
 import { fireToast } from "../Notification/Notification";
 import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 export const style = {
     position: "absolute",
@@ -35,14 +38,6 @@ export const style = {
     outline: "none",
     boxShadow: 24,
     p: 4,
-};
-
-const initialValues = {
-    streetAddress: "",
-    state: "",
-    pincode: "",
-    city: "",
-    country: "",
 };
 
 const validationSchema = new Yup.ObjectSchema({
@@ -57,6 +52,15 @@ const validationSchema = new Yup.ObjectSchema({
 });
 
 const Cart = () => {
+    const [initialValues, setInitialValues] = useState({
+        streetAddress: "",
+        state: "",
+        pincode: "",
+        city: "",
+        country: "",
+    });
+    const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+
     const dispatch = useDispatch();
     const { cart } = useSelector((store) => store);
     const [hasChosen, setHasChosen] = useState(false);
@@ -96,9 +100,6 @@ const Cart = () => {
             },
         };
         dispatch(createOrder(req));
-        setTimeout(() => {
-            dispatch(clearCart());
-        }, 200);
     };
 
     const handleAddressSubmit = (values) => {
@@ -116,11 +117,45 @@ const Cart = () => {
         dispatch(createAddress(req));
         fireToast("Address added successfully");
         handleClose();
+        setInitialValues({
+            streetAddress: "",
+            state: "",
+            pincode: "",
+            city: "",
+            country: "",
+        });
     };
 
     const handleClearCart = () => {
         dispatch(clearCart());
         fireToast("Cart Cleared");
+    };
+
+    const getAddress = () => {
+        setIsLoadingLocation(true);
+        navigator.geolocation.getCurrentPosition((pos) => {
+            const { latitude, longitude } = pos.coords;
+            console.log(latitude, longitude);
+            const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`;
+            fetch(url)
+                .then((res) => res.json())
+                .then((data) => {
+                    const currentAddress = data.address;
+                    const city = currentAddress.state_district;
+                    const state = currentAddress.state;
+                    const country = currentAddress.country;
+                    const pincode = currentAddress.postcode;
+                    setInitialValues({
+                        ...initialValues,
+                        city,
+                        state,
+                        country,
+                        pincode,
+                    });
+                    setIsLoadingLocation(false);
+                    fireToast("🚀 Please Fill Precise Street Address", "info");
+                });
+        });
     };
 
     return (
@@ -261,7 +296,13 @@ const Cart = () => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
+                    <div className="pb-4">
+                    <Typography variant="h5" className="text-center align-middle">
+                        Add New Address
+                    </Typography>
+                    </div>
                     <Formik
+                        enableReinitialize={true}
                         initialValues={initialValues}
                         validationSchema={validationSchema}
                         onSubmit={handleAddressSubmit}
@@ -365,6 +406,18 @@ const Cart = () => {
                                                 </ErrorMessage>
                                             }
                                         ></Field>
+                                    </Grid>
+                                    <Grid item xs={12} lg={12}>
+                                        <LoadingButton
+                                            loading={isLoadingLocation}
+                                            loadingPosition="start"
+                                            startIcon={<MyLocationIcon />}
+                                            fullWidth
+                                            onClick={getAddress}
+                                            variant="outlined"
+                                        >
+                                            Use My Current Address
+                                        </LoadingButton>
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Button
