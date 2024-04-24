@@ -1,13 +1,26 @@
 import React, { useEffect } from "react";
 import OrderCard from "./OrderCard";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserOrders } from "../State/Orders/Action";
+import { getUserOrders, updateWebSocketOrder } from "../State/Orders/Action";
+import { useSubscription } from "react-stomp-hooks";
 
 const Orders = () => {
     const { order } = useSelector((store) => store);
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
-
+    useSubscription("/topic/reply", (message) => {
+        const {id, status} = JSON.parse(message.body);
+        const allOrders = order.orders;
+        for (let index = 0; index < allOrders.length; index++) {
+            const element = allOrders[index];
+            if(element.id === id){
+                element.orderStatus = status;
+                dispatch(updateWebSocketOrder(element));
+                break;
+            }
+        }
+    });
+    
     useEffect(() => {
         dispatch(getUserOrders(jwt));
     }, []);

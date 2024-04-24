@@ -7,6 +7,7 @@ import { getUser } from "./components/State/Authentication/Action";
 import { findCart } from "./components/State/Cart/Action";
 import Routers from "./components/Routers/Routers";
 import { getRestaurantByUserId } from "./components/State/Restaurant/Action";
+import { StompSessionProvider } from "react-stomp-hooks";
 
 export const ColorModeContext = createContext({ toggleColorMode: () => {} });
 
@@ -69,12 +70,14 @@ function App() {
 
     return (
         <div>
-            <ColorModeContext.Provider value={colorMode}>
-                <ThemeProvider theme={theme}>
-                    <CssBaseline />
-                    <Routers />
-                </ThemeProvider>
-            </ColorModeContext.Provider>
+            <StompSessionProvider url="http://localhost:5454/ws-endpoint">
+                <ColorModeContext.Provider value={colorMode}>
+                    <ThemeProvider theme={theme}>
+                        <CssBaseline />
+                        <Routers />
+                    </ThemeProvider>
+                </ColorModeContext.Provider>
+            </StompSessionProvider>
         </div>
     );
 }

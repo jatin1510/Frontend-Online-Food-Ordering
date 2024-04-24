@@ -55,6 +55,16 @@ export const orderReducer = (state = initialState, action) => {
                 ),
                 loading: false,
             };
+        
+        case actionTypes.ORDER_UPDATE_WS:
+            return {
+                ...state,
+                orders: state.orders.map((order) =>
+                    order.id === action.payload.id
+                        ? action.payload
+                        : order
+                ),
+            };
 
         case actionTypes.CREATE_ORDER_FAILURE:
         case actionTypes.GET_USER_ORDERS_FAILURE:

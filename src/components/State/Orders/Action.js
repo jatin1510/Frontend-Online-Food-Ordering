@@ -10,6 +10,7 @@ import {
     GET_USER_ORDERS_FAILURE,
     GET_USER_ORDERS_REQUEST,
     GET_USER_ORDERS_SUCCESS,
+    ORDER_UPDATE_WS,
     PAYMENT_FAILURE,
     PAYMENT_REQUEST,
     PAYMENT_SUCCESS,
@@ -100,11 +101,14 @@ export const deleteOrder = (req) => {
     return async (dispatch) => {
         dispatch({ type: DELETE_ORDER_REQUEST });
         try {
-            const response = await api.delete(`/api/order/payment/failure/${req.orderId}`, {
-                headers: {
-                    Authorization: `Bearer ${req.jwt}`,
-                },
-            });
+            const response = await api.delete(
+                `/api/order/payment/failure/${req.orderId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${req.jwt}`,
+                    },
+                }
+            );
             console.log("Delete order data: ", response);
             dispatch({ type: DELETE_ORDER_SUCCESS, payload: req.orderId });
         } catch (error) {
@@ -112,4 +116,10 @@ export const deleteOrder = (req) => {
             dispatch({ type: DELETE_ORDER_FAILURE, payload: error });
         }
     };
-}
+};
+
+export const updateWebSocketOrder = (order) => {
+    return async (dispatch) => {
+        dispatch({ type: ORDER_UPDATE_WS, payload: order });
+    };
+};

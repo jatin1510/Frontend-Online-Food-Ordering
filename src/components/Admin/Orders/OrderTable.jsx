@@ -23,6 +23,7 @@ import {
 } from "../../State/Restaurant Order/Action";
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
+import { useStompClient } from "react-stomp-hooks";
 
 const colors = {
     PENDING: "red",
@@ -38,6 +39,16 @@ const orderStatus = [
 ];
 
 const OrderTable = ({ filterValue = "all" }) => {
+    const stompClient = useStompClient();
+    const publishMessage = (id, status) => {
+        if (stompClient) {
+            stompClient.publish({
+                destination: "/app/broadcast",
+                body: JSON.stringify({ id, status }),
+            });
+        }
+    };
+
     const dispatch = useDispatch();
     const { restaurant, restaurantOrder } = useSelector((store) => store);
 
@@ -67,6 +78,7 @@ const OrderTable = ({ filterValue = "all" }) => {
     const handleUpdateOrderStatus = (value) => {
         console.log("Order id: ", id);
         console.log(value);
+        publishMessage(id, value);
         dispatch(
             updateOrderStatus({
                 jwt: localStorage.getItem("jwt"),
@@ -92,152 +104,176 @@ const OrderTable = ({ filterValue = "all" }) => {
                                 <TableCell align="right">Price</TableCell>
                                 <TableCell>Items</TableCell>
                                 <TableCell>Status</TableCell>
-                                {filterValue === "all" && <TableCell>Update</TableCell>}
+                                {filterValue === "all" && (
+                                    <TableCell>Update</TableCell>
+                                )}
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {restaurantOrder.orders
-                            .sort(
-                                (a, b) =>
-                                    new Date(b.createdAt).getTime() -
-                                    new Date(a.createdAt).getTime()
-                            )
-                            .map((item, index) => {
-                                return (
-                                    <TableRow
-                                        key={item.id}
-                                        sx={{
-                                            "&:last-child td, &:last-child th":
-                                                {
-                                                    border: 0,
-                                                },
-                                        }}
-                                    >
-                                        <TableCell component="th" scope="row">
-                                            {item.id}
-                                        </TableCell>
-                                        <TableCell align="center">
-                                            <AvatarGroup max={3}>
-                                                {item.items.map((orderItem) => {
-                                                    return (
-                                                        <Avatar
-                                                            src={
-                                                                orderItem.food
-                                                                    .images[0]
-                                                            }
-                                                        />
-                                                    );
-                                                })}
-                                            </AvatarGroup>
-                                        </TableCell>
-                                        <TableCell>
+                                .sort(
+                                    (a, b) =>
+                                        new Date(b.createdAt).getTime() -
+                                        new Date(a.createdAt).getTime()
+                                )
+                                .map((item, index) => {
+                                    return (
+                                        <TableRow
+                                            key={item.id}
+                                            sx={{
+                                                "&:last-child td, &:last-child th":
+                                                    {
+                                                        border: 0,
+                                                    },
+                                            }}
+                                        >
+                                            <TableCell
+                                                component="th"
+                                                scope="row"
+                                            >
+                                                {item.id}
+                                            </TableCell>
+                                            <TableCell align="center">
+                                                <AvatarGroup max={3}>
+                                                    {item.items.map(
+                                                        (orderItem) => {
+                                                            return (
+                                                                <Avatar
+                                                                    src={
+                                                                        orderItem
+                                                                            .food
+                                                                            .images[0]
+                                                                    }
+                                                                />
+                                                            );
+                                                        }
+                                                    )}
+                                                </AvatarGroup>
+                                            </TableCell>
+                                            <TableCell>
                                                 <div className="font-semibold text-sm">
                                                     {item.customer?.fullName}
                                                 </div>
                                                 <div className="text-xs">
                                                     {item.customer?.email}
                                                 </div>
-                                        </TableCell>
-                                        <TableCell align="right">
-                                            {item.totalPrice}
-                                        </TableCell>
-                                        <TableCell>
-                                            <SimpleTreeView>
-                                                {item.items.map((orderItem) => {
-                                                    return (
-                                                        <TreeItem
-                                                            itemId={
-                                                                orderItem.id
-                                                            }
-                                                            label={
-                                                                orderItem.food
-                                                                    .name
-                                                            }
-                                                        >
-                                                            {orderItem.ingredients.map(
-                                                                (
-                                                                    ingredient
-                                                                ) => {
-                                                                    return (
-                                                                        <TreeItem
-                                                                            sx={{
-                                                                                "&:hover":
-                                                                                    {
-                                                                                        background:
-                                                                                            "none",
-                                                                                    },
-                                                                            }}
-                                                                            itemId={
-                                                                                ingredient
-                                                                            }
-                                                                            label={
-                                                                                "- " +
-                                                                                ingredient
-                                                                            }
-                                                                        />
-                                                                    );
-                                                                }
-                                                            )}
-                                                        </TreeItem>
-                                                    );
-                                                })}
-                                            </SimpleTreeView>
-                                        </TableCell>
-                                        <TableCell
-                                            sx={{
-                                                color: colors[item.orderStatus],
-                                            }}
-                                        >
-                                            {item.orderStatus}
-                                        </TableCell>
-                                        {filterValue === "all" && <TableCell>
-                                            <Button
-                                                id="basic-button"
-                                                aria-controls={
-                                                    open
-                                                        ? "basic-menu"
-                                                        : undefined
-                                                }
-                                                aria-haspopup="true"
-                                                aria-expanded={
-                                                    open ? "true" : undefined
-                                                }
-                                                onClick={(e) =>
-                                                    handleClick(e, item.id)
-                                                }
-                                                color="primary"
-                                                variant="outlined"
-                                            >
-                                                Update
-                                            </Button>
-                                            <Menu
-                                                id="basic-menu"
-                                                anchorEl={anchorEl}
-                                                open={open}
-                                                onClose={handleClose}
-                                                MenuListProps={{
-                                                    "aria-labelledby":
-                                                        "basic-button",
+                                            </TableCell>
+                                            <TableCell align="right">
+                                                {item.totalPrice}
+                                            </TableCell>
+                                            <TableCell>
+                                                <SimpleTreeView>
+                                                    {item.items.map(
+                                                        (orderItem) => {
+                                                            return (
+                                                                <TreeItem
+                                                                    itemId={
+                                                                        orderItem.id
+                                                                    }
+                                                                    label={
+                                                                        orderItem
+                                                                            .food
+                                                                            .name
+                                                                    }
+                                                                >
+                                                                    {orderItem.ingredients.map(
+                                                                        (
+                                                                            ingredient
+                                                                        ) => {
+                                                                            return (
+                                                                                <TreeItem
+                                                                                    sx={{
+                                                                                        "&:hover":
+                                                                                            {
+                                                                                                background:
+                                                                                                    "none",
+                                                                                            },
+                                                                                    }}
+                                                                                    itemId={
+                                                                                        ingredient
+                                                                                    }
+                                                                                    label={
+                                                                                        "- " +
+                                                                                        ingredient
+                                                                                    }
+                                                                                />
+                                                                            );
+                                                                        }
+                                                                    )}
+                                                                </TreeItem>
+                                                            );
+                                                        }
+                                                    )}
+                                                </SimpleTreeView>
+                                            </TableCell>
+                                            <TableCell
+                                                sx={{
+                                                    color: colors[
+                                                        item.orderStatus
+                                                    ],
                                                 }}
                                             >
-                                                {orderStatus.map((status) => {
-                                                    return (
-                                                        <MenuItem
-                                                            onClick={() =>
-                                                                handleUpdateOrderStatus(
-                                                                    status.value
-                                                                )
+                                                {item.orderStatus}
+                                            </TableCell>
+                                            {filterValue === "all" && (
+                                                <TableCell>
+                                                    <Button
+                                                        id="basic-button"
+                                                        aria-controls={
+                                                            open
+                                                                ? "basic-menu"
+                                                                : undefined
+                                                        }
+                                                        aria-haspopup="true"
+                                                        aria-expanded={
+                                                            open
+                                                                ? "true"
+                                                                : undefined
+                                                        }
+                                                        onClick={(e) =>
+                                                            handleClick(
+                                                                e,
+                                                                item.id
+                                                            )
+                                                        }
+                                                        color="primary"
+                                                        variant="outlined"
+                                                    >
+                                                        Update
+                                                    </Button>
+                                                    <Menu
+                                                        id="basic-menu"
+                                                        anchorEl={anchorEl}
+                                                        open={open}
+                                                        onClose={handleClose}
+                                                        MenuListProps={{
+                                                            "aria-labelledby":
+                                                                "basic-button",
+                                                        }}
+                                                    >
+                                                        {orderStatus.map(
+                                                            (status) => {
+                                                                return (
+                                                                    <MenuItem
+                                                                        onClick={() =>
+                                                                            handleUpdateOrderStatus(
+                                                                                status.value
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            status.label
+                                                                        }
+                                                                    </MenuItem>
+                                                                );
                                                             }
-                                                        >
-                                                            {status.label}
-                                                        </MenuItem>
-                                                    );
-                                                })}
-                                            </Menu>
-                                        </TableCell>}
-                                    </TableRow>
-                                );
-                            })}
+                                                        )}
+                                                    </Menu>
+                                                </TableCell>
+                                            )}
+                                        </TableRow>
+                                    );
+                                })}
                         </TableBody>
                     </Table>
                 </TableContainer>
