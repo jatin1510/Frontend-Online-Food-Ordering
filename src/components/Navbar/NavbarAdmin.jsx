@@ -24,7 +24,7 @@ const NavbarAdmin = () => {
             <div className="flex items-center space-x-4"></div>
             <div className="flex items-center space-x-4">
                 <li className="logo font-semibold text-white text-2xl">
-                    Admin Panel
+                    Restaurant Admin Panel
                 </li>
             </div>
 

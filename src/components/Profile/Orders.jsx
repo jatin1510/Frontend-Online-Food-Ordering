@@ -3,6 +3,7 @@ import OrderCard from "./OrderCard";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserOrders, updateWebSocketOrder } from "../State/Orders/Action";
 import { useSubscription } from "react-stomp-hooks";
+import { fireToast } from "../Notification/Notification";
 
 const Orders = () => {
     const { order } = useSelector((store) => store);
@@ -16,6 +17,7 @@ const Orders = () => {
             if(element.id === id){
                 element.orderStatus = status;
                 dispatch(updateWebSocketOrder(element));
+                fireToast("Order " + id + ": Status Updated", "info");
                 break;
             }
         }
